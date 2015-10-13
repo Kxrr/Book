@@ -6,22 +6,29 @@ from models import SpiderForm, BookInfo
 
 from untils.spiders import DoubanSpider, JdSpider
 
-
 @app.route('/')
-def hello():
+def index():
+    books = BookInfo.objects
+    return render_template('index.html', books=books)
+
+
+@app.route('/manager')
+def manager():
     form = SpiderForm()
-    Spiders = BookInfo.objects
-    return render_template('index.html', form=form, Spiders=Spiders)
+    books = BookInfo.objects
+    return render_template('manager.html', form=form, books=books)
 
 @app.route('/add_from_url', methods=['POST'])
 def add_from_url():
     form = SpiderForm(request.form)
     raw_url = form.raw_url.data
     if 'douban' in raw_url:
-        DoubanSpider(raw_url).start()
-        return ''
+        spider_book = DoubanSpider(raw_url)
+        spider_book.start()
+        spider_book.scrub_content()
+        return 'Done.'
     elif 'jd' in raw_url:
         JdSpider(raw_url).start()
-        return ''
+        return 'Working'
     else:
         return 'Wrong!'
