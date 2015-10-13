@@ -8,6 +8,6 @@ if __name__ == '__main__':
 
 # TODO:
 # Jd, Douban
-
 # 借阅 - 登录
 # 管理
+# auth用blueprint独立
