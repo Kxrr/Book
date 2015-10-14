@@ -2,9 +2,12 @@
 
 import requests
 from lxml import etree
+from app.models import BookInfo
 
 class JdSpider(object):
-
+    """
+    http://book.jd.com/
+    """
     def __init__(self, url):
         self.url = url
         print 'Douban initiating...'
@@ -15,7 +18,9 @@ class JdSpider(object):
 
 
 class DoubanSpider(object):
-
+    """
+    http://book.jd.com/
+    """
     def __init__(self, url):
         self.url = url
         print 'Douban initiating...'
@@ -23,10 +28,20 @@ class DoubanSpider(object):
     def start(self):
         self.content = requests.get(self.url).content
 
-    def sort_content(self):
+    def scrub_content(self):
         html = etree.HTML(self.content)
-        title = html.xpath('//h1/span/text()')
-        author = html.xpath('//div[@id="info"]//a/text()')
-        rate = html.xpath('//div[@class="rating_wrap"]//strong/text()')
+        title = html.xpath('//h1/span/text()')[0]
+        author = html.xpath('//div[@id="info"]//a/text()')[0]
+        rate = float(html.xpath('//div[@class="rating_wrap"]//strong/text()')[0])  # float
+        detail = html.xpath('//div[@class="intro"]/p/text()')  # paragraph, lists
+        tags = html.xpath('//div[@class="indent"]/span/a/text()')  # lists
+        category = ''
+        raw_url = self.url
+
+        BookInfo(title=title, author=author, rate=rate, detail=detail, tags=tags, category=category, raw_url=raw_url).save()
 
 
+
+# d = DoubanSpider('http://book.douban.com/subject/25909313/?icn=index-editionrecommend')
+# d.start()
+# d.scrub_content()

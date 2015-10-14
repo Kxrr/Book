@@ -1,9 +1,14 @@
-__author__ = 'kxrr'
-from app import app
+#-*- coding: utf-8 -*-
+import app
 
-if __name__ == '__main__':
-    app.run(port=5321)
+app.creat_app()
+
+
+
 
 
 # TODO:
 # Jd, Douban
+# 借阅 - 登录
+# 管理
+# auth用blueprint独立
