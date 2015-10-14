@@ -11,6 +11,7 @@ class User(DynamicDocument):
     username = StringField(max_length=10, unique=True)
     password = StringField()
     real_name = StringField()
+    borrowed_book = ListField(ReferenceField('BookInfo'))
 
     def is_authenticated(self):
         return True
@@ -37,6 +38,9 @@ class BookInfo(DynamicDocument):
     user_borrowed = ReferenceField(User)
 
     meta = {'collection': 'BookInfo', 'ordering': ['-update_time']}
+
+    def __repr__(self):
+        return self.raw_url
 
 class Deliver(DynamicDocument):
     start_time = DateTimeField()

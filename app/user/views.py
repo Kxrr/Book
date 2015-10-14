@@ -31,9 +31,11 @@ def handle_register():
     if register_form_info.validate():
         User(username=register_form_info.username.data, password=register_form_info.password.data,
              real_name=register_form_info.real_name.data).save()
-        return 'Register done.'
+        flash(u'注册成功,自动登录还没做,自个登吧')
+        # TODO: 需要自动登录
+        return redirect('/')
     else:
-        return 'Wrong!'
+        return 'Wrong...'
 
 @user.route('/Login')
 def login():
@@ -61,6 +63,7 @@ def handle_login():
 @user.route('/handle_logout')
 def handle_logout():
     logout_user()
+    flash(u'退出成功')
     return redirect('/')
 
 @user.route('/test_login')
