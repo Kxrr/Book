@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
-
+<div>输入<a href="http://book.douban.com">豆瓣图书</a>链接</div>
 <form action="/add_from_url" method="POST">
     <div class="form-group">
         {{ form.hidden_tag() }}
         {{ form.raw_url(class="form-control") }}
     <br />
     <div class="controls">
-        <button class="btn btn-default">Add Book From Douban</button>
+        <button class="btn btn-default">添加书籍</button>
     </div>
 </div>
 

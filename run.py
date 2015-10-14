@@ -1,7 +1,8 @@
 #-*- coding: utf-8 -*-
-import app
 
-app.creat_app()
+from app import app
+app.debug=True
+app.run(port=5321)
 
 
 
