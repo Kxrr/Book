@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>书名: </h3>
+<div>{{ book.title }}</div>
+
+<h3>简介: </h3>
+{% for d in book.detail %}
+    <p>{{ d }}</p>
+{% endfor %}
+
+
+<h3>评论</h3>
+    -
+
+<h3>借阅记录</h3>
+    -
+    
+{% endblock %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div>输入<a href="http://book.douban.com">豆瓣图书</a>链接</div>
+<div>输入<a href="http://book.douban.com">豆瓣图书</a>链接, 例如<a href="http://book.douban.com/subject/26276743/">http://book.douban.com/subject/26276743/</a></div>
 <form action="/add_from_url" method="POST">
     <div class="form-group">
         {{ form.hidden_tag() }}

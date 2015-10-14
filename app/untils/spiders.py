@@ -10,7 +10,6 @@ class JdSpider(object):
     """
     def __init__(self, url):
         self.url = url
-        print 'Douban initiating...'
 
     def start(self):
         self.content = requests.get(self.url).content
@@ -23,7 +22,6 @@ class DoubanSpider(object):
     """
     def __init__(self, url):
         self.url = url
-        print 'Douban initiating...'
 
     def start(self):
         self.content = requests.get(self.url).content

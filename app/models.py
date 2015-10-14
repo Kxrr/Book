@@ -8,8 +8,8 @@ from datetime import datetime
 connect('BookRoom')
 
 class User(DynamicDocument):
-    username = StringField(max_length=10, unique=True)
-    password = StringField()
+    username = StringField(max_length=10, unique=True, required=True)
+    password = StringField(required=True)
     real_name = StringField()
     borrowed_book = ListField(ReferenceField('BookInfo'))
     role = StringField(default='staff')

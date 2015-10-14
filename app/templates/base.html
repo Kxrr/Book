@@ -23,10 +23,22 @@
     </div>
 
 <div class="row">
-    <div class="col-md-2"></div>
+    <div class="col-md-2">
+
+    </div>
 
     <div class="col-md-8">
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+        <p style="color: red">{{ message }}</p>
+    {% endfor %}
+  {% else %}
+    <p style="color: red; visibility: hidden;">-</p>
+  {% endif %}
+{% endwith %}
     {% block content %}
+
     {% endblock %}
     <div>
 

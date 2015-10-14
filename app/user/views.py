@@ -1,8 +1,8 @@
 #-*- coding: utf-8 -*-                                                                                     
 
 from flask import render_template, request, redirect, url_for, flash
-from models import BookInfo, User
-from models import SpiderForm, UserForm
+from app.models import BookInfo, User
+from app.models import SpiderForm, UserForm
 from app import app
 from . import user
 from flask.ext.login import LoginManager
@@ -29,13 +29,18 @@ def register():
 def handle_register():
     register_form_info = UserForm(request.form)
     if register_form_info.validate():
-        User(username=register_form_info.username.data, password=register_form_info.password.data,
-             real_name=register_form_info.real_name.data).save()
-        flash(u'注册成功,自动登录还没做,自个登吧')
-        # TODO: 需要自动登录
-        return redirect('/')
+        if User.objects(username=register_form_info.username.data):
+            flash(u'用户名己被注册')
+            return redirect('/Register')
+        else:
+            User(username=register_form_info.username.data, password=register_form_info.password.data,
+                 real_name=register_form_info.real_name.data).save()
+            flash(u'注册成功, 自动登录还没做, 自个登吧')
+            # TODO: 需要自动登录
+            return redirect('/Login')
     else:
-        return 'Wrong...'
+        flash(u'信息不对')
+        return '/Register'
 
 @user.route('/Login')
 def login():

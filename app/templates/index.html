@@ -8,16 +8,8 @@
 <a href="/Manager">管理书籍</a>
 {% endif %}
 
-<p></p>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-        <p style="color: red">{{ message }}</p>
-    {% endfor %}
-  {% else %}
-    <p style="color: red; visibility: hidden;">-</p>
-  {% endif %}
-{% endwith %}
+<br /><br /><br />
+
 
 <div>在架书籍</div>
 
@@ -38,14 +30,15 @@
 
 
 
-            <td> {{ book.title }}</td>
+            <td>{{ book.title }}</td>
             <td> {{ book.author }} </td>
             <td>{% for tag in book.tags %}
                 {{ tag }}
                 {% endfor %}
             </td>
             <td>
-                <a href="/borrow_book/{{ book.id }}">借书</a>
+                <a href="/borrow_book/{{ book.id }}">借阅</a>
+                <a href="/Detail/{{ book.id }}">详情</a>
             </td>
 
 

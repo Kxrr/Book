@@ -1,9 +1,9 @@
 #-*- coding: utf-8 -*-                                                                                     
 
-from flask import render_template, request, redirect, url_for
-from models import BookInfo, User
-from models import SpiderForm, UserForm
-from untils.spiders import DoubanSpider
+from flask import render_template, request, redirect, url_for, flash
+from app.models import BookInfo, User
+from app.models import SpiderForm, UserForm
+from app.untils.spiders import DoubanSpider
 
 from . import admin
 
@@ -21,7 +21,8 @@ def add_from_url():
         spider_book = DoubanSpider(raw_url)
         spider_book.start()
         spider_book.scrub_content()
-        return 'Done.'
+        flash(u'添加成功')
+        return redirect('/Manager')
     elif 'jd' in raw_url:
         return 'Working'
     else:
