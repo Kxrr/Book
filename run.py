@@ -9,7 +9,9 @@ app.run(port=5321)
 
 
 # TODO:
-# Jd, Douban
-# 借阅 - 登录
+# Jd
+# Douban | Done
+# 借阅 - 登录 !!
 # 管理
-# auth用blueprint独立
+# auth用blueprint独立| Done
+# 名字的[]外理

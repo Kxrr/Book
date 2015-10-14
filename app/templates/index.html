@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
+{% if user.is_active %}
+你好, <a href="#"> {{ user.username }} </a> | <a href="/handle_logout">登出</a>
+{% else %}
 <a href="/Login">登录</a>
 <a href="/Register">注册</a>
 <a href="/Manager">管理书籍</a>
+{% endif %}
+
+
+
 
 <div>在架书籍</div>
 

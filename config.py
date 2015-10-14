@@ -7,3 +7,5 @@ MONGODB_SETTINGS = {'DB':'BookRoom'}
 SCRET_KEY = 'kxrr'
 WTF_CSRF_ENABLED = False
 
+SESSION_TYPE = 'mongodb'
+

@@ -12,6 +12,16 @@ class User(DynamicDocument):
     password = StringField()
     real_name = StringField()
 
+    def is_authenticated(self):
+        return True
+    def is_active(self):
+        return True
+    def is_anonymous(self):
+        return False
+    def get_id(self):
+        return str(self.id)  # Watch out here, needs str
+    def __repr__(self):
+        return self.username
 
 class BookInfo(DynamicDocument):
     title = StringField(unique=True)
@@ -36,3 +46,6 @@ class Deliver(DynamicDocument):
 
 SpiderForm = model_form(BookInfo)
 UserForm = model_form(User)
+
+# import ipdb; ipdb.set_trace()
+# print ''
