@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+在架书籍
+
+<div class="table-responsive">
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>书名</th>
+        <th>作者</th>
+        <th>标签</th>
+        <th>命令</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        {% for book in books %}
+            <tr>
+
+
+
+            <td> {{ book.title }}</td>
+            <td> {{ book.author }} </td>
+            <td>{% for tag in book.tags %}
+                {{ tag }}
+                {% endfor %}
+            </td>
+            <td>
+                <a href="/borrow_book/{{ book.id }}">借书</a>
+            </td>
+
+
+
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+
+
+
+{% endblock %}

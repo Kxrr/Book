@@ -1,0 +1,26 @@
+
+
+/* Mine */
+@font-face {
+  font-family: "Noto Serif";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Noto Serif"), local("NotoSerif"), url("/static/fonts/NotoSerif.woff") format("woff");
+}
+
+* {
+	 font-family: "Helvetica Neue", Helvetica, Microsoft YaHei Noto, Serif, serif  ;
+}
+
+.todo-head, .todo-head:hover {
+  text-decoration: none;
+}
+
+body {
+  /*background: url(/static/images/bg.jpg) no-repeat center center fixed;*/
+  background-color: #f7f7f7;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}

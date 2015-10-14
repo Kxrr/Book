@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<form action="/handle_register" method="POST">
+    <div class="form-group">
+        {{ form.hidden_tag() }}
+        用户名:
+        {{ form.username(class="form-control") }}
+        密码:
+        {{ form.password(class="form-control") }}
+        真实姓名:
+        {{ form.real_name(class="form-control") }}
+    <br />
+    <div class="controls">
+        <button class="btn btn-default">注册</button>
+    </div>
+</div>
+
+{% endblock %}

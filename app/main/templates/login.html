@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<form action="/handle_login" method="POST">
+    <div class="form-group">
+        {{ form.hidden_tag() }}
+        用户名:
+        {{ form.username(class="form-control") }}
+        密码:
+        {{ form.password(class="form-control") }}
+    <br />
+    <div class="controls">
+        <button class="btn btn-default">登录</button>
+    </div>
+</div>
+
+{% endblock %}
