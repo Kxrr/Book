@@ -18,7 +18,8 @@ def return_book(book_id):
     book_obj = BookInfo.objects(id=book_id).first()
 
     if book_obj.user_borrowed.id == user_obj.id:
-        user_obj.update(pull__borrowed_book=user_obj)
+        print type(book_obj)
+        user_obj.update(pull__borrowed_book=book_obj)
         book_obj.update(on_bookshelf=True, unset__user_borrowed=1)
         flash(u'Done.')
         return redirect('/')
