@@ -28,5 +28,5 @@ class DoubanSpider(object):
         title = html.xpath('//h1/span/text()')
         author = html.xpath('//div[@id="info"]//a/text()')
         rate = html.xpath('//div[@class="rating_wrap"]//strong/text()')
-        
+
 
