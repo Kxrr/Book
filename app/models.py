@@ -12,6 +12,7 @@ class User(DynamicDocument):
     password = StringField()
     real_name = StringField()
     borrowed_book = ListField(ReferenceField('BookInfo'))
+    role = StringField(default='staff')
 
     def is_authenticated(self):
         return True
@@ -53,5 +54,3 @@ class Deliver(DynamicDocument):
 SpiderForm = model_form(BookInfo)
 UserForm = model_form(User)
 
-# import ipdb; ipdb.set_trace()
-# print ''
