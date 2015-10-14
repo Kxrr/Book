@@ -12,8 +12,6 @@ class User(DynamicDocument):
     password = StringField()
     real_name = StringField()
 
-    book_borrowed = ListField(StringField())
-    history = ListField(StringField())
 
 class BookInfo(DynamicDocument):
     title = StringField(unique=True)
@@ -30,9 +28,11 @@ class BookInfo(DynamicDocument):
 
     meta = {'collection': 'BookInfo', 'ordering': ['-update_time']}
 
-class DetailPage(DynamicDocument):
-    title = ReferenceField(BookInfo)
-    comments = ''
+class Deliver(DynamicDocument):
+    start_time = DateTimeField()
+    deadline_time = DateTimeField()
+    username = ReferenceField(User)
+
 
 SpiderForm = model_form(BookInfo)
 UserForm = model_form(User)

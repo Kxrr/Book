@@ -10,7 +10,7 @@ from . import main
 
 @main.route('/')
 def index():
-    books = BookInfo.objects
+    books = BookInfo.objects.filter(on_bookshelf=True)
     return render_template('index.html', books=books)
 
 @main.route('/borrow_book/<string:book_id>')
