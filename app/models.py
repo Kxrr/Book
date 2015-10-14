@@ -24,6 +24,8 @@ class User(DynamicDocument):
     def __repr__(self):
         return self.username
 
+    meta = {'collection': 'UserInfo', 'ordering': ['+username']}
+
 class BookInfo(DynamicDocument):
     title = StringField(unique=True)
     author = StringField()
