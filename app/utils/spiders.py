@@ -29,7 +29,11 @@ class DoubanSpider(object):
     def scrub_content(self):
         html = etree.HTML(self.content)
         title = html.xpath('//h1/span/text()')[0]
-        author = html.xpath('//div[@id="info"]//a/text()')[0]
+        try:
+            author = html.xpath('//div[@id="info"]//a/text()')[0]
+        except:
+            author=''
+            pass # TODO:
         rate = float(html.xpath('//div[@class="rating_wrap"]//strong/text()')[0])  # float
         detail = html.xpath('//div[@class="intro"]/p/text()')  # paragraph, lists
         tags = html.xpath('//div[@class="indent"]/span/a/text()')  # lists
