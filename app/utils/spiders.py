@@ -18,7 +18,7 @@ class JdSpider(object):
 
 class DoubanSpider(object):
     """
-    http://book.jd.com/
+    TODO: http://read.douban.com/ebook/1120350/?dcs=book-search
     """
     def __init__(self, url):
         self.url = url

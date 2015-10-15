@@ -18,7 +18,6 @@ def load_user(id):
         return user.first()
     else:
         return ''
-    
 
 @user.route('/Register')
 def register():
@@ -33,8 +32,9 @@ def handle_register():
             flash(u'用户名己被注册')
             return redirect('/Register')
         else:
-            User(username=register_form_info.username.data, password=register_form_info.password.data,
-                 real_name=register_form_info.real_name.data).save()
+            new_user = User(username=register_form_info.username.data, password=register_form_info.password.data,
+                            real_name=register_form_info.real_name.data)
+            new_user.save()
             flash(u'注册成功, 自动登录还没做, 自个登吧')
             # TODO: 需要自动登录
             return redirect('/Login')
@@ -58,7 +58,6 @@ def handle_login():
         if user_online:
             print user_online.first().id
             login_user(user=user_online.first(), remember=True)
-            print 'Login success'
             return redirect('/')
         else:
             return 'Login faild'

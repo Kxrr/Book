@@ -21,7 +21,7 @@ def return_book(book_id):
         print type(book_obj)
         user_obj.update(pull__borrowed_book=book_obj)
         book_obj.update(on_bookshelf=True, unset__user_borrowed=1)
-        flash(u'Done.')
+        flash(u'「{}」, 归还成功'.format(book_obj.title))
         return redirect('/')
 
     return 'wrong!'

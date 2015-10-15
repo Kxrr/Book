@@ -25,7 +25,7 @@ class User(DynamicDocument):
     def __repr__(self):
         return self.username
 
-    meta = {'collection': 'UserInfo', 'ordering': ['+username']}
+    meta = {'ordering': ['+username']}
 
 class BookInfo(DynamicDocument):
     title = StringField(unique=True)
@@ -40,7 +40,7 @@ class BookInfo(DynamicDocument):
     on_bookshelf = BooleanField(default=True)
     user_borrowed = ReferenceField(User)
 
-    meta = {'collection': 'BookInfo', 'ordering': ['-update_time']}
+    meta = {'ordering': ['-update_time']}
 
     def __repr__(self):
         return self.raw_url
