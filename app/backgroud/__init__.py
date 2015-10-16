@@ -2,6 +2,7 @@
 
 from flask import Blueprint
 
-admin = Blueprint('admin', __name__)
+backgroud = Blueprint('background', __name__)
 
 from . import views
+

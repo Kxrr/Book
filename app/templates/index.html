@@ -54,7 +54,6 @@
     <tbody>
         {% for book in books %}
             <tr>
-
             <td><a href="/Detail/{{ book.id }}" title="详情">{{ book.title }}</a></td>
             <td> {{ book.author }} </td>
             <td>{% for tag in book.tags %}

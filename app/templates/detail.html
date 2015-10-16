@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<h3>书名: </h3>
-<div>{{ book.title }}</div>
-
+<h3>书籍: </h3>
+<div><a href="{{ book.raw_url }}" target="_blank" title="打开原添加网址"><img src="{{ book.img_url }}" /></a></div>
+<div><a href="{{ book.raw_url }}" target="_blank" title="打开原添加网址">{{ book.title }}</a></div>
+<p>作者: {{ book.author }}</p>
+<p>评分: {{ book.rate }}</p>
 <h3>简介: </h3>
 {% for d in book.detail %}
     <p>{{ d }}</p>
 {% endfor %}
-
 
 <h3>评论</h3>
 {% for comment in book.comment %}

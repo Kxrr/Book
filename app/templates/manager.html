@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-
+<h3>从网站添加书籍</h3>
 <form action="/add_from_url" method="post">
   <div class="form-group">
     <label><a href="http://book.douban.com">豆瓣图书</a>链接</label>
@@ -14,9 +14,36 @@
     <input type="text" class="form-control" id="exampleInputPassword1" placeholder="{{ user.real_name }}" name="owner">
   </div>
 
-  <button type="submit" class="btn btn-default">添加书籍</button>
+  <button type="submit" class="btn btn-default">添加</button>
 </form>
 
-
+{#<ul class="nav nav-list"> <li class="divider"></li> </ul>#}
+{#<h3>手动添加资料</h3>#}
+{#<form action="/add_by_input" method="post">#}
+{#  <div class="form-group">#}
+{#    <label>标题</label>#}
+{#    <input type="text" class="form-control" placeholder="" name="title">#}
+{#  </div>#}
+{##}
+{#  <div class="form-group">#}
+{#    <label>作者</label>#}
+{#    <input type="text" class="form-control" name="author">#}
+{#  </div>#}
+{##}
+{#  <div class="form-group">#}
+{#    <label>详情</label>#}
+{#    <input type="text" class="form-control" placeholder="" name="detail">#}
+{#  </div>#}
+{##}
+{#  <div class="form-group">#}
+{#    <label>图片地址</label>#}
+{#    <input type="text" class="form-control" placeholder="" name="img_url">#}
+{#  </div>#}
+{#  <div class="form-group">#}
+{#    <label>链接地址</label>#}
+{#    <input type="text" class="form-control" placeholder="" name="raw_url">#}
+{#  </div>#}
+{#  <button type="submit" class="btn btn-default">添加</button>#}
+{#</form>#}
 
 {% endblock %}

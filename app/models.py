@@ -53,6 +53,7 @@ class BookInfo(DynamicDocument):
     tags = ListField(StringField())
     category = StringField()
     raw_url = StringField()
+    img_url = StringField()
     update_time = DateTimeField(default=datetime.now())
     on_bookshelf = BooleanField(default=True)
     owner = StringField(required=True)
