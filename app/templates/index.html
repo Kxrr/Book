@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 {% if user.is_active %}
-你好, <a href="#"> {{ user.real_name }}</a> | <a href="/handle_logout">登出</a> | <a href="/MyInfo">个人书架</a>
-{% if user.role == 'admin' %}
-    | <a href="/Manager">管理入口</a>
-{% endif %}
+<div>你好, {{ user.real_name }} | <a href="/MyInfo">个人书架</a> | <a href="/handle_logout">登出</a>
+{#{% if user.role == 'admin' %}#}
+{#    | <a href="/Manager">管理入口</a>#}
+{#{% endif %}#}
+| <a href="/Manager">管理入口</a>
+</div>
 {% else %}
+<div>
 <a href="/Login">登录</a>
 <a href="/Register">注册</a>
+</div>        
 {% endif %}
 
 {## TODO: simplify all_books, users    #}
@@ -78,8 +82,12 @@
 </table>
 </div>
 
+<div>
+
 {% for n in range(1, page) %}
     <a href="/page/{{ n }}">{{ n }}</a>
 {% endfor %}
+</div>
+
 
 {% endblock %}

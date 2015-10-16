@@ -16,7 +16,7 @@
     <tbody>
         {% for book in user.borrowed_book %}
             <tr>
-            <td> {{ book.title }}</td>
+            <td><a href="/Detail/{{ book.id }}">{{ book.title }}</a></td>
             <td> {{ deliverys.filter(book=book).first().deadline.strftime('%Y-%m-%d') }} </td>
             </tr>
         {% endfor %}

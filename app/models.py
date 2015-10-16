@@ -1,11 +1,12 @@
 #-*- coding: utf-8 -*
 
-from mongoengine import DynamicDocument, connect, StringField, ListField, FloatField, \
-    DateTimeField, BooleanField, ReferenceField
+from mongoengine import DynamicDocument, EmbeddedDocument, connect, StringField, ListField, FloatField, \
+    DateTimeField, BooleanField, ReferenceField, EmbeddedDocumentField
 from flask.ext.mongoengine.wtf import model_form
 from datetime import datetime, timedelta
 
 connect('BookRoom')
+
 
 class User(DynamicDocument):
     username = StringField(max_length=15, unique=True, required=True, min_length=5)
@@ -16,18 +17,35 @@ class User(DynamicDocument):
 
     def is_authenticated(self):
         return True
+
     def is_active(self):
         return True
+
     def is_anonymous(self):
         return False
+
     def get_id(self):
         return str(self.id)  # Watch out here, needs str
+
     def __repr__(self):
         return self.username
 
     meta = {'ordering': ['+username']}
 
+
+class Comment(EmbeddedDocument):
+    """
+    @summary: 用户评论
+    """
+    content = StringField()
+    name = ReferenceField(User)
+    time = DateTimeField(default=datetime.now())
+    meta = {'ordering': ['-time']}
+
 class BookInfo(DynamicDocument):
+    """
+    @summary: 书的信息
+    """
     title = StringField(unique=True)
     author = StringField()
     rate = FloatField()
@@ -41,10 +59,13 @@ class BookInfo(DynamicDocument):
 
     user_borrowed = ReferenceField(User)
 
+    comment = ListField(EmbeddedDocumentField(Comment))
+
     meta = {'ordering': ['-update_time']}
 
     def __repr__(self):
         return self.raw_url
+
 
 class Operation(DynamicDocument):
     """
@@ -56,6 +77,8 @@ class Operation(DynamicDocument):
     book_info = ReferenceField(BookInfo)
 
     url_info = StringField()
+    meta = {'oddering':['-time']}
+
 
 class Delivery(DynamicDocument):
     """
@@ -73,6 +96,3 @@ class Delivery(DynamicDocument):
 
 SpiderForm = model_form(BookInfo)
 UserForm = model_form(User)
-
-# import ipdb; ipdb.set_trace()
-# print ''

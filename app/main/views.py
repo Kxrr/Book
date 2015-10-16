@@ -2,13 +2,13 @@
 
 
 from flask import render_template, redirect, flash, request
-from app.models import BookInfo, User, Operation, Delivery
+from app.models import BookInfo, User, Operation, Delivery, Comment
 from . import main
 from flask.ext.login import login_user, logout_user, current_user, login_required
 
 from app.utils.search_mongo import search
 
-page_limit = 3
+page_limit = 10
 
 @main.route('/')
 def index():
@@ -19,6 +19,7 @@ def index():
 
 @main.route('/page/<string:n>')
 def index_page(n):
+    # TODO: 分页实现的优化
     skip = (int(n)-1) * page_limit
     limit = page_limit
     book_count = BookInfo.objects.count()
@@ -49,7 +50,8 @@ def borrow_book(book_id):
 @main.route('/Detail/<string:book_id>')
 def book_detail(book_id):
     book_obj = BookInfo.objects(id=book_id).first()
-    return render_template('detail.html', book=book_obj)
+    delivers = Delivery.objects(book=book_obj)
+    return render_template('detail.html', book=book_obj, delivers=delivers)
 
 
 @main.route('/Search', methods=['POST'])
@@ -64,6 +66,18 @@ def filter_shelf():
     books = all_books.filter(on_bookshelf=True)
     users = User.objects
     return render_template('index.html', books=books, user=current_user, all_books=all_books, users=users, page=1)
+
+@main.route('/handle_comment', methods=['POST'])
+def handle_comment():
+    form = request.form
+    content = request.form['content']
+    book_id = request.form['book_id']
+    user = User.objects(id=current_user.id).first()
+    book = BookInfo.objects(id=book_id).first()
+    comment = Comment(content=content, name=user)
+    book.update(push__comment=comment)
+    flash(u'评论成功')
+    return redirect('/Detail/{}'.format(book_id))
 
 
 

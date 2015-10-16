@@ -8,9 +8,9 @@
 <table class="table table-hover">
     <thead>
     <tr>
-        <th>己借书籍</th>
+        <th>书名</th>
         <th>应归还时间</th>
-        <th>命令</th>
+        <th>操作</th>
     </tr>
     </thead>
 
@@ -18,8 +18,10 @@
         {% for book in books %}
             <tr>
 
-            <td> {{ book.title }}</td>
-            <td> {{ deliverys.filter(book=book).first().deadline.strftime('%Y-%m-%d') }} </td>
+            <td><a href="/Detail/{{ book.id }}">{{ book.title }}</a></td>
+            <td> {{ deliverys.filter(book=book).first().deadline.strftime('%Y-%m-%d') }}
+            还有{{ (deliverys.filter(book=book).first().deadline - now).days }}天
+            </td>
             <td>
                 <a href="/return_book/{{ book.id }}">还书</a>
             </td>

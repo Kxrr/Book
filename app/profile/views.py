@@ -12,7 +12,8 @@ def profile_info():
     user_obj = User.objects(id=current_user.id).first()
     user_borrowed_books = user_obj.borrowed_book
     deliverys = Delivery.objects(user=user_obj)
-    return render_template('profile.html', books=user_borrowed_books, user=user_obj, deliverys=deliverys)
+    now = datetime.now()
+    return render_template('profile.html', books=user_borrowed_books, user=user_obj, deliverys=deliverys, now=now)
 
 @profile.route('/return_book/<string:book_id>')
 def return_book(book_id):
