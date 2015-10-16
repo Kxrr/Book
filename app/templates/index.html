@@ -1,13 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 {% if user.is_active %}
-你好, <a href="#"> {{ user.real_name }}</a> | <a href="/handle_logout">登出</a> | <a href="/MyInfo">我的记录</a> | <a href="/Manager">管理员</a>
+你好, <a href="#"> {{ user.real_name }}</a> | <a href="/handle_logout">登出</a> | <a href="/MyInfo">个人书架</a>
+{% if user.role == 'admin' %}
+    | <a href="/Manager">管理入口</a>
+{% endif %}
 {% else %}
 <a href="/Login">登录</a>
 <a href="/Register">注册</a>
-
 {% endif %}
 
+{## TODO: simplify all_books, users    #}
+<div>目前共有{{ all_books.count() }}本书, 出借{{ all_books.count() - all_books.filter(on_bookshelf=True).count() }}本; 有{{ users.count() }}位用户</div>
+<br />
 <form class="form-inline" action="/Search" method="post">
   <div class="form-group">
     <input type="text" class="form-control" name="keyword" placeholder="请输入关键字">
@@ -16,19 +21,28 @@
 </form>
 
 <br />
-<div>筛选[# TODO]</div>
-<br />
+<div class="btn-group">
+  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    过滤 <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+        <li><a href="/filter/on_bookshelf">在架书籍</a></li>
+        <li><a href="/">全部书籍</a></li>
+  </ul>
+</div>
 
 
-<h3>在架书籍</h3>
+<h3>书籍</h3>
 
 <div class="table-responsive">
 <table class="table table-hover">
+
     <thead>
     <tr>
         <th>书名</th>
         <th>作者</th>
         <th>标签</th>
+        <th>状态</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -37,21 +51,26 @@
         {% for book in books %}
             <tr>
 
-
-
-            <td><a href="/Detail/{{ book.id }}">{{ book.title }}</a></td>
+            <td><a href="/Detail/{{ book.id }}" title="详情">{{ book.title }}</a></td>
             <td> {{ book.author }} </td>
             <td>{% for tag in book.tags %}
                 {{ tag }}
                 {% endfor %}
             </td>
             <td>
-                {% if user.is_active %}
-                    <a href="/borrow_book/{{ book.id }}">借阅</a>
+                {% if book.on_bookshelf %}
+                    在架
+                {% else %}
+                    己被<a href="/Profile/{{ book.user_borrowed.id }}" title="去看{{ book.user_borrowed.real_name }}书架">[{{ book.user_borrowed.real_name  }}]</a>借走
                 {% endif %}
             </td>
-
-
+            <td>
+            {% if book.on_bookshelf %}
+                <a href="/borrow_book/{{ book.id }}">借阅</a>
+            {% else %}
+                <s>借阅</s>
+            {% endif %}
+            </td>
 
             </tr>
         {% endfor %}
@@ -59,7 +78,8 @@
 </table>
 </div>
 
-
-
+{% for n in range(1, page) %}
+    <a href="/page/{{ n }}">{{ n }}</a>
+{% endfor %}
 
 {% endblock %}

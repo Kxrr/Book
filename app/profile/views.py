@@ -1,16 +1,18 @@
 #-*- coding: utf-8 -*-                                                                                     
 
 from flask import render_template, redirect, url_for, flash
-from app.models import BookInfo, User
+from app.models import BookInfo, User, Operation, Delivery
 from . import profile
 from flask.ext.login import login_user, logout_user, current_user
+
+from datetime import datetime
 
 @profile.route('/MyInfo')
 def profile_info():
     user_obj = User.objects(id=current_user.id).first()
-    user_borrowed_objs = user_obj.borrowed_book
-
-    return render_template('profile.html', books=user_borrowed_objs)
+    user_borrowed_books = user_obj.borrowed_book
+    deliverys = Delivery.objects(user=user_obj)
+    return render_template('profile.html', books=user_borrowed_books, user=user_obj, deliverys=deliverys)
 
 @profile.route('/return_book/<string:book_id>')
 def return_book(book_id):
@@ -18,11 +20,17 @@ def return_book(book_id):
     book_obj = BookInfo.objects(id=book_id).first()
 
     if book_obj.user_borrowed.id == user_obj.id:
-        print type(book_obj)
         user_obj.update(pull__borrowed_book=book_obj)
         book_obj.update(on_bookshelf=True, unset__user_borrowed=1)
         flash(u'「{}」, 归还成功'.format(book_obj.title))
+        Operation(type='return', user=user_obj, book_info=book_obj).save()
+        Delivery.objects(user=user_obj, book=book_obj).update(set__return_time=datetime.now(), set__returned=True)
         return redirect('/')
 
     return 'wrong!'
 
+@profile.route('/Profile/<string:id>')
+def user_info(id):
+    user = User.objects(id=id).first()
+    deliverys = Delivery.objects(user=user)
+    return render_template('profile_pub.html', user=user, deliverys=deliverys)

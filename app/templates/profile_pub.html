@@ -2,7 +2,7 @@
 {% block content %}
 
 
-<h3>己借书籍</h3>
+<h3>[{{ user.real_name }}]的书架</h3>
 
 <div class="table-responsive">
 <table class="table table-hover">
@@ -10,20 +10,14 @@
     <tr>
         <th>己借书籍</th>
         <th>应归还时间</th>
-        <th>命令</th>
     </tr>
     </thead>
 
     <tbody>
-        {% for book in books %}
+        {% for book in user.borrowed_book %}
             <tr>
-
             <td> {{ book.title }}</td>
             <td> {{ deliverys.filter(book=book).first().deadline.strftime('%Y-%m-%d') }} </td>
-            <td>
-                <a href="/return_book/{{ book.id }}">还书</a>
-            </td>
-
             </tr>
         {% endfor %}
     </tbody>

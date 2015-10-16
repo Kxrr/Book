@@ -56,18 +56,19 @@ def handle_login():
         user_online = User.objects(username=username, password=password)
 
         if user_online:
-            print user_online.first().id
             login_user(user=user_online.first(), remember=True)
             return redirect('/')
         else:
-            return 'Login faild'
+            flash(u'帐号与密码不匹配')
+            return redirect('/Login')
     else:
-        print 'Wrong form'
+        flash(u'非法输入')
+        return redirect('/Login')
 
 @user.route('/handle_logout')
 def handle_logout():
     logout_user()
-    flash(u'退出成功')
+    flash(u'己登出')
     return redirect('/')
 
 @user.route('/test_login')
