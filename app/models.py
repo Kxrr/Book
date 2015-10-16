@@ -9,9 +9,11 @@ connect('BookRoom')
 
 
 class User(DynamicDocument):
-    username = StringField(max_length=15, unique=True, required=True, min_length=5)
-    password = StringField(required=True)
-    real_name = StringField(min_length=2)
+    username = StringField(max_length=20, unique=True, required=True, min_length=4)
+    email = StringField()
+    password = StringField(required=True, min_length=6)
+    nickname = StringField(min_length=1)
+    real_name = StringField()
     borrowed_book = ListField(ReferenceField('BookInfo'))
     role = StringField(default='staff')
 
@@ -26,6 +28,11 @@ class User(DynamicDocument):
 
     def get_id(self):
         return str(self.id)  # Watch out here, needs str
+
+    def save(self, *args, **kwargs):
+        if not self.real_name:
+            self.real_name = self.nickname
+        return super(User, self).save(*args, **kwargs)
 
     def __repr__(self):
         return self.username
@@ -97,3 +104,6 @@ class Delivery(DynamicDocument):
 
 SpiderForm = model_form(BookInfo)
 UserForm = model_form(User)
+
+# import ipdb; ipdb.set_trace()
+# print ''

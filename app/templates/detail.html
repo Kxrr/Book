@@ -12,7 +12,7 @@
 
 <h3>评论</h3>
 {% for comment in book.comment %}
-<div>{{ comment.time.strftime('%Y-%m-%d %H:%M:%S') }} <strong>{{ comment.name.real_name }}</strong> 说: {{ comment.content }}</div>
+<div>{{ comment.time.strftime('%Y-%m-%d %H:%M:%S') }} <strong>{{ comment.name.nickname }}</strong> 说: {{ comment.content }}</div>
 {% endfor %}
 
 <form action="/handle_comment" method="post">
@@ -26,7 +26,7 @@
 
 <h3>借阅记录</h3>
 {% for deliver in delivers %}
-    <p>{{ deliver.user.real_name  }} 在 {{ deliver.borrow_time.strftime('%Y-%m-%d') }} 借过这本书</p>
+    <p>{{ deliver.user.nickname  }} 在 {{ deliver.borrow_time.strftime('%Y-%m-%d') }} 借过这本书</p>
 {% endfor %}
     
 {% endblock %}

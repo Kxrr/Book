@@ -17,10 +17,10 @@ def manager():
 @backgroud.route('/add_from_url', methods=['POST'])
 def add_from_url():
     raw_url = request.form['raw_url']
-    # owner = User.objects(real_name=request.form['owner']).first()  # TODO: 做选框
+    # owner = User.objects(nickname=request.form['owner']).first()  # TODO: 做选框
     # if not owner:  #
-    #     owner = current_user.real_name
-    owner = current_user.real_name
+    #     owner = current_user.nickname
+    owner = current_user.nickname
     if 'book.douban' in raw_url:
         spider = DoubanSpider(url=raw_url, owner=owner)
         spider.crawl()
