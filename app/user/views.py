@@ -33,7 +33,7 @@ def handle_register():
             return redirect('/Register')
         else:
             new_user = User(username=register_form_info.username.data, password=register_form_info.password.data,
-                            nickname=register_form_info.nickname.data)
+                            nickname=register_form_info.nickname.data, email=register_form_info.email.data)
             new_user.save()
             flash(u'注册成功, 自动登录还没做, 自个登吧')
             # TODO: 需要自动登录
@@ -53,7 +53,10 @@ def handle_login():
     if login_form_info.validate():
         username = login_form_info.username.data
         password = login_form_info.password.data
-        user_online = User.objects(username=username, password=password)
+        if '@' in username:
+            user_online = User.objects(email=username, password=password)
+        else:
+            user_online = User.objects(username=username, password=password)
 
         if user_online:
             login_user(user=user_online.first(), remember=True)

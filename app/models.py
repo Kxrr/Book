@@ -47,7 +47,7 @@ class Comment(EmbeddedDocument):
     content = StringField()
     name = ReferenceField(User)
     time = DateTimeField(default=datetime.now())
-    meta = {'ordering': ['-time']}
+    meta = {'ordering': ['-time', '-id']}
 
 class BookInfo(DynamicDocument):
     """
@@ -69,7 +69,7 @@ class BookInfo(DynamicDocument):
 
     comment = ListField(EmbeddedDocumentField(Comment))
 
-    meta = {'ordering': ['-update_time']}
+    meta = {'ordering': ['-update_time', '-id']}
 
     def __repr__(self):
         return self.raw_url
@@ -85,7 +85,7 @@ class Operation(DynamicDocument):
     book_info = ReferenceField(BookInfo)
 
     url_info = StringField()
-    meta = {'oddering':['-time']}
+    meta = {'oddering':['-time', '-id']}
 
 
 class Delivery(DynamicDocument):

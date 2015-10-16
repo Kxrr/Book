@@ -1,20 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-<h3>书籍: </h3>
+<h3><a href="{{ book.raw_url }}" target="_blank" title="打开原添加网址">{{ book.title }}</a></h3>
 <div><a href="{{ book.raw_url }}" target="_blank" title="打开原添加网址"><img src="{{ book.img_url }}" /></a></div>
-<div><a href="{{ book.raw_url }}" target="_blank" title="打开原添加网址">{{ book.title }}</a></div>
-<p>作者: {{ book.author }}</p>
-<p>评分: {{ book.rate }}</p>
-<h3>简介: </h3>
-{% for d in book.detail %}
-    <p>{{ d }}</p>
-{% endfor %}
+
 
 <h3>评论</h3>
-{% for comment in book.comment %}
-<div>{{ comment.time.strftime('%Y-%m-%d %H:%M:%S') }} <strong>{{ comment.name.nickname }}</strong> 说: {{ comment.content }}</div>
-{% endfor %}
-
+{% if not book.comment %}
+    <div class="alert alert-warning" role="alert">还没有讨论</div>
+{% else %}
+    {% for comment in book.comment %}
+    <div>{{ comment.time.strftime('%Y-%m-%d %H:%M:%S') }} <strong>{{ comment.name.nickname }}</strong> 说: {{ comment.content }}</div>
+    {% endfor %}
+{% endif %}
 <form action="/handle_comment" method="post">
   <div class="form-group">
     <input type="text" class="form-control" name="content" placeholder="">
@@ -23,10 +20,22 @@
   <button type="submit" class="btn btn-default">添加评论</button>
 </form>
 
-
 <h3>借阅记录</h3>
-{% for deliver in delivers %}
-    <p>{{ deliver.user.nickname  }} 在 {{ deliver.borrow_time.strftime('%Y-%m-%d') }} 借过这本书</p>
+{% if not delivers %}
+    <div class="alert alert-warning" role="alert">还没有人借过这本书</div>
+{% else %}
+    {% for deliver in delivers %}
+        <p>{{ deliver.user.nickname  }} 在 {{ deliver.borrow_time.strftime('%Y-%m-%d') }} 借过这本书</p>
+    {% endfor %}
+{% endif %}
+<h3>简介: </h3>
+{% for d in book.detail %}
+    <p>{{ d }}</p>
 {% endfor %}
+
+
+
+
+
     
 {% endblock %}
