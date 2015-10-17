@@ -5,9 +5,10 @@
 <hr align="left" width="30%">
 {% from "_formhelpers.html" import render_field %}
 <form method=post action="/handle_login" >
-    {{ render_field(form.username, class="form-control", placeholder="支持用户名/邮箱") }}
+    {{ render_field(form.username, class="form-control", placeholder="用户名或邮箱") }}
     {{ render_field(form.password, class="form-control") }}
   <p><input type=submit value="登录" class="btn btn-default">
+      <div><a href="{{ url_for('user.register') }}">还没有帐号?</a></div>
 </form>
 
 {% endblock %}

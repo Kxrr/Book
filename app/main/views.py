@@ -4,7 +4,7 @@
 from flask import render_template, redirect, flash, request, url_for
 from app.models import BookInfo, User, Operation, Delivery, Comment
 from . import main
-from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask.ext.login import current_user, login_required
 
 from app.utils.search_mongo import search
 
@@ -83,8 +83,16 @@ def handle_comment():
     return redirect('/Detail/{}'.format(book_id))
 
 
+@main.route('/test_1')
+@login_required
+def test_1():
+    return '--'
 
-
+@main.errorhandler(401)
+def un_authorized(e):
+    flash(u'此操作需要登录')
+    # return redirect(url_for('user.login')), 401
+    return redirect('/Login')
 
 
 

@@ -73,9 +73,4 @@ def handle_logout():
     flash(u'己登出')
     return redirect('/')
 
-@user.route('/test_login')
-@login_required
-def test_login():
-    print current_user.username
-    return '~~~~'
 

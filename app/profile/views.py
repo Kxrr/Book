@@ -28,11 +28,19 @@ def return_book(book_id):
         Operation(type='return', user=user_obj, book_info=book_obj).save()
         Delivery.objects(user=user_obj, book=book_obj).update(set__return_time=datetime.now(), set__returned=True)
         return redirect('/')
-
-    return 'wrong!'
+    else:
+        flash(u'非法操作')
+        return redirect('/')
 
 @profile.route('/Profile/<string:id>')
 def user_info(id):
     user = User.objects(id=id).first()
     deliverys = Delivery.objects(user=user)
     return render_template('profile_pub.html', user=user, deliverys=deliverys)
+
+@profile.errorhandler(401)
+def un_authorized(e):
+    flash(u'此操作需要登录')
+    # return redirect(url_for('user.login')), 401
+    return redirect('/Login')
+
