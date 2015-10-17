@@ -8,7 +8,7 @@ from flask.ext.login import current_user, login_required
 
 from app.utils.search_mongo import search
 
-page_limit = 2
+page_limit = 7
 
 @main.route('/')
 def index():

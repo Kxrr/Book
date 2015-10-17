@@ -8,38 +8,42 @@ from flask.ext.login import login_required, current_user
 from . import backgroud
 
 @backgroud.route('/Manager')
+@login_required
 def manager():
     if current_user.is_active():  # TODO: 管理role
         books = BookInfo.objects
-        return render_template('manager.html', books=books, user=current_user)
+        users = User.objects(id__ne=current_user.id)
+        return render_template('manager.html', books=books, current_user=current_user, users=users)
 
 @backgroud.route('/add_from_url', methods=['POST'])
 def add_from_url():
     raw_url = request.form['raw_url']
-    # owner = User.objects(nickname=request.form['owner']).first()  # TODO: 做选框
-    # if not owner:  #
-    #     owner = current_user.nickname
-    owner = current_user.nickname
+    owner_id = request.form['owner']
     if 'book.douban' in raw_url:
-        spider = DoubanSpider(url=raw_url, owner=owner)
+        spider = DoubanSpider(url=raw_url, owner_id=owner_id)
         spider.crawl()
-        spider.parse_content()
-        flash(u'添加成功')
+        parse = spider.parse_content()
+        if parse:
+            flash(u'添加成功')
         Operation(type='add', url_info=raw_url,
-                  user=User.objects(id=current_user.id).first()).save()
+                  user=User.objects.get(id=current_user.id)).save()
         return redirect('/Manager')
     elif 'read.douban' in raw_url:
-        spider = DoubanReadSpider(url=raw_url, owner=owner)
+        spider = DoubanReadSpider(url=raw_url, owner_id=owner_id)
         spider.crawl()
-        spider.parse_content()
+        parse = spider.parse_content()
+        if parse:
+            flash(u'添加成功')
         Operation(type='add', url_info=raw_url,
-                  user=User.objects(id=current_user.id).first()).save()
+                  user=User.objects.get(id=current_user.id)).save()
         return redirect('/Manager')
 
     elif 'jd' in raw_url:
         return 'Under Working'
     else:
         flash(u'暂不支持该链接')
+        Operation(type='add', url_info=raw_url,note='not support',
+                  user=User.objects.get(id=current_user.id)).save()
         return redirect('/Manager')
 
 @backgroud.route('/add_by_input', methods=['POST'])

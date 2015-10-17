@@ -1,15 +1,15 @@
 #-*- coding: utf-8 -*-
 
 import requests
+from flask import flash
 from lxml import etree
-from app.models import BookInfo
-from flask.ext.login import current_user
-
+from app.models import BookInfo, User
+from mongoengine.queryset import NotUniqueError
 
 class BasicSpider(object):
-    def __init__(self, url, owner=''):
+    def __init__(self, url, owner_id):
         self.url = url
-        self.owner = owner
+        self.owner_id = owner_id
         self.content = ''
         self.html = ''
 
@@ -47,9 +47,14 @@ class DoubanSpider(BasicSpider):
         except:
             img_url = ''
         category = ''  # TODO:
-
-        BookInfo(title=title, author=author, rate=rate, detail=detail, tags=tags,
-                 category=category, raw_url=self.url, owner=self.owner, img_url=img_url).save()
+        try:
+            BookInfo(title=title, author=author, rate=rate, detail=detail, tags=tags,
+                     category=category, raw_url=self.url,
+                     owner=User.objects.get(id=self.owner_id), img_url=img_url).save()
+            return True
+        except NotUniqueError,e:
+            flash(u'这本书己经添加过了')
+            return False
 
 
 class DoubanReadSpider(BasicSpider):
@@ -63,9 +68,14 @@ class DoubanReadSpider(BasicSpider):
         detail = self.html.xpath('//div[@class="article-profile-section article-profile-intros"]//p/text()')
         tags = self.html.xpath('//*[@class="tags"]//span[1]/text()')
         category = ''
-        img_url = self.html.xpath('//div[@class="cover shadow-cover"]/img/@src')
-
-        BookInfo(title=title, author=author, rate=rate, detail=detail, tags=tags,
-                 category=category, raw_url=self.url, owner=self.owner, img_url=img_url).save()
+        img_url = self.html.xpath('//div[@class="cover shadow-cover"]/img/@src')[0]
+        try:
+            BookInfo(title=title, author=author, rate=rate, detail=detail, tags=tags,
+                     category=category, raw_url=self.url,
+                     owner=User.objects.get(id=self.owner_id), img_url=img_url).save()
+            return True
+        except NotUniqueError,e:
+            flash(u'这本书己经添加过了')
+            return False
 
 

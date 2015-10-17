@@ -61,12 +61,12 @@
                 {% if book.on_bookshelf %}
                     在架
                 {% else %}
-                    己被<a href="/Profile/{{ book.user_borrowed.id }}" title="去看{{ book.user_borrowed.nickname }}书架">[{{ book.user_borrowed.nickname  }}]</a>借走
+                    己被<a href="/Profile/{{ book.user_borrowed.id }}" title="去看{{ book.user_borrowed.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ book.user_borrowed.nickname }} </a>借走
                 {% endif %}
             </td>
             <td>
             {% if book.on_bookshelf %}
-                <a href="/borrow_book/{{ book.id }}">借阅</a>
+                <a href="/borrow_book/{{ book.id }}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> 借阅</a>
             {% else %}
                 <s>借阅</s>
             {% endif %}

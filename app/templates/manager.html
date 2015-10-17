@@ -11,8 +11,16 @@
   <br />
   <div class="form-group">
     <label for="exampleInputPassword1">书籍所有者</label>
-    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="{{ user.nickname }}" name="owner">
+    <br />
+    <select size="1" id="select" name="owner">
+        <option value="{{ current_user.id }}">{{ current_user.nickname }}</option>
+        {% for user in users %}
+            <option value="{{ user.id }}">{{ user.nickname }}</option>
+        {% endfor %}
+    </select>
+
   </div>
+
 
   <button type="submit" class="btn btn-default">添加</button>
 </form>

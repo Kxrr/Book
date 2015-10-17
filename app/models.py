@@ -37,7 +37,7 @@ class User(DynamicDocument):
     def __repr__(self):
         return self.username
 
-    meta = {'ordering': ['+username']}
+    meta = {'ordering': ['+nickname']}
 
 
 class Comment(EmbeddedDocument):
@@ -63,7 +63,7 @@ class BookInfo(DynamicDocument):
     img_url = StringField()
     update_time = DateTimeField(default=datetime.now())
     on_bookshelf = BooleanField(default=True)
-    owner = StringField(required=True)
+    owner = ReferenceField(User)
 
     user_borrowed = ReferenceField(User)
 
@@ -83,6 +83,7 @@ class Operation(DynamicDocument):
     user = ReferenceField(User)
     time = DateTimeField(default=datetime.now())
     book_info = ReferenceField(BookInfo)
+    note = StringField()
 
     url_info = StringField()
     meta = {'oddering':['-time', '-id']}
