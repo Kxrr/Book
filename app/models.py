@@ -10,7 +10,7 @@ connect('BookRoom')
 
 class User(DynamicDocument):
     username = StringField(max_length=20, unique=True, required=True, min_length=4)
-    email = StringField()
+    email = StringField(unique=True)
     password = StringField(required=True, min_length=6)
     nickname = StringField(min_length=1)
     real_name = StringField()
@@ -100,10 +100,6 @@ class Delivery(DynamicDocument):
 
     return_time = DateTimeField()
     returned = BooleanField(default=False)
-
-
-SpiderForm = model_form(BookInfo)
-UserForm = model_form(User)
 
 # import ipdb; ipdb.set_trace()
 # print ''

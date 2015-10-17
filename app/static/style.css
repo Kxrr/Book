@@ -12,8 +12,12 @@
 	 font-family: "Helvetica Neue", Helvetica, Microsoft YaHei Noto, Serif, serif  ;
 }
 
-.todo-head, .todo-head:hover {
-  text-decoration: none;
+#username, #password, #email, #nickname{
+  width: 20%;
+}
+
+.br-head:hover{
+  text-decoration: none!important;
 }
 
 body {

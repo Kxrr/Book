@@ -1,8 +1,7 @@
 #-*- coding: utf-8 -*-                                                                                     
 
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, flash
 from app.models import BookInfo, User, Operation
-from app.models import SpiderForm, UserForm
 from app.utils.spiders import DoubanSpider, DoubanReadSpider, JdSpider
 from flask.ext.login import login_required, current_user
 

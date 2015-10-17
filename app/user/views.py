@@ -2,14 +2,13 @@
 
 from flask import render_template, request, redirect, url_for, flash
 from app.models import BookInfo, User
-from app.models import SpiderForm, UserForm
-from app import app
+from app.user.forms import RegisterForm, LoginForm
+from app import lm
 from . import user
-from flask.ext.login import LoginManager
+
 from flask.ext.login import login_user, logout_user, current_user, login_required
 
-lm = LoginManager()
-lm.init_app(app)
+
 
 @lm.user_loader
 def load_user(id):
@@ -21,12 +20,12 @@ def load_user(id):
 
 @user.route('/Register')
 def register():
-    register_form = UserForm()
+    register_form = RegisterForm()
     return render_template('register.html', form=register_form)
 
 @user.route('/handle_register', methods=['POST'])
 def handle_register():
-    register_form_info = UserForm(request.form)
+    register_form_info = RegisterForm(request.form)
     if register_form_info.validate():
         if User.objects(username=register_form_info.username.data):
             flash(u'用户名己被注册')
@@ -44,12 +43,12 @@ def handle_register():
 
 @user.route('/Login')
 def login():
-    login_form = UserForm()
+    login_form = LoginForm()
     return render_template('login.html', form=login_form)
 
 @user.route('/handle_login', methods=['POST'])
 def handle_login():
-    login_form_info = UserForm(request.form)
+    login_form_info = LoginForm(request.form)
     if login_form_info.validate():
         username = login_form_info.username.data
         password = login_form_info.password.data

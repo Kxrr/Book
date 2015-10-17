@@ -1,33 +1,35 @@
 #-*- coding: utf-8 -*
 
 
-from flask import render_template, redirect, flash, request
+from flask import render_template, redirect, flash, request, url_for
 from app.models import BookInfo, User, Operation, Delivery, Comment
 from . import main
 from flask.ext.login import login_user, logout_user, current_user, login_required
 
 from app.utils.search_mongo import search
 
-page_limit = 10
+page_limit = 2
 
 @main.route('/')
 def index():
     book_count = BookInfo.objects.count()
     books = BookInfo.objects.limit(page_limit)
     users = User.objects
-    return render_template('index.html', books=books, user=current_user, all_books=books, users=users, page=(book_count/page_limit)+2)
+    return render_template('index.html', books=books, user=current_user, all_books=books, users=users,
+                           page=(book_count/page_limit)+2, current_page=1)
 
 @main.route('/page/<string:n>')
 def index_page(n):
     # TODO: 分页实现的优化
     skip = (int(n)-1) * page_limit
-    limit = page_limit
     book_count = BookInfo.objects.count()
     books = BookInfo.objects.skip(skip).limit(page_limit)
     users = User.objects
-    return render_template('index.html', books=books, user=current_user, all_books=books, users=users, page=(book_count/page_limit)+2)
+    return render_template('index.html', books=books, user=current_user, all_books=books, users=users,
+                           page=(book_count/page_limit)+2, current_page=int(n))
 
 @main.route('/borrow_book/<string:book_id>')
+@login_required
 def borrow_book(book_id):
     if current_user.is_active:
         book_obj = BookInfo.objects(id=book_id).first()
@@ -68,6 +70,7 @@ def filter_shelf():
     return render_template('index.html', books=books, user=current_user, all_books=all_books, users=users, page=1)
 
 @main.route('/handle_comment', methods=['POST'])
+@login_required
 def handle_comment():
     form = request.form
     content = request.form['content']
@@ -78,6 +81,8 @@ def handle_comment():
     book.update(push__comment=comment)
     flash(u'评论成功')
     return redirect('/Detail/{}'.format(book_id))
+
+
 
 
 

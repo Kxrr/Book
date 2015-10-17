@@ -24,7 +24,7 @@
   <button type="submit" class="btn btn-default">搜索</button>
 </form>
 
-<br />
+<h3>书籍</h3>
 <div class="btn-group">
   <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     过滤 <span class="caret"></span>
@@ -34,9 +34,6 @@
         <li><a href="/">全部书籍</a></li>
   </ul>
 </div>
-
-
-<h3>书籍</h3>
 
 <div class="table-responsive">
 <table class="table table-hover">
@@ -84,7 +81,11 @@
 <div>
 
 {% for n in range(1, page) %}
-    <a href="/page/{{ n }}">{{ n }}</a>
+    {% if n != current_page %}
+        <a href="/page/{{ n }}">{{ n }}</a>
+    {% else %}
+        <span>{{ n }}</span>
+    {% endif %}
 {% endfor %}
 </div>
 

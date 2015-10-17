@@ -3,7 +3,7 @@
 from flask import render_template, redirect, url_for, flash
 from app.models import BookInfo, User, Operation, Delivery
 from . import profile
-from flask.ext.login import login_user, logout_user, current_user
+from flask.ext.login import current_user, login_required
 
 from datetime import datetime
 
@@ -16,6 +16,7 @@ def profile_info():
     return render_template('profile.html', books=user_borrowed_books, user=user_obj, deliverys=deliverys, now=now)
 
 @profile.route('/return_book/<string:book_id>')
+@login_required
 def return_book(book_id):
     user_obj = User.objects(id=current_user.id).first()
     book_obj = BookInfo.objects(id=book_id).first()

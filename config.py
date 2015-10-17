@@ -4,8 +4,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 MONGODB_SETTINGS = {'DB':'BookRoom'}
-SCRET_KEY = 'kxrr'
+SECRET_KEY = 'kxrr'
 WTF_CSRF_ENABLED = False
-
 SESSION_TYPE = 'mongodb'
 

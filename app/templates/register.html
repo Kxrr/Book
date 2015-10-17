@@ -2,21 +2,14 @@
 {% block content %}
 
 <h3>注册</h3>
-<form action="/handle_register" method="POST">
-    <div class="form-group">
-        {{ form.hidden_tag() }}
-        用户名:
-        {{ form.username(class="form-control") }}
-        邮箱:
-        {{ form.email(class="form-control") }}
-        密码:
-        {{ form.password(class="form-control") }}
-        昵称:
-        {{ form.nickname(class="form-control") }}
-    <br />
-    <div class="controls">
-        <button class="btn btn-default">注册</button>
-    </div>
-</div>
+<hr align="left" width="30%">
+{% from "_formhelpers.html" import render_field %}
+<form method=post action="/handle_register">
+    {{ render_field(form.username, class="form-control", placeholder="请输入英文用户名") }}
+    {{ render_field(form.email, class="form-control") }}
+    {{ render_field(form.password, class="form-control") }}
+    {{ render_field(form.nickname, class="form-control", placeholder="请输入中文昵称") }}
+  <p><input type=submit value="立即注册" class="btn btn-default">
+</form>
 
 {% endblock %}

@@ -2,17 +2,12 @@
 {% block content %}
 
 <h3>登录</h3>
-<form action="/handle_login" method="POST">
-    <div class="form-group">
-        {{ form.hidden_tag() }}
-        用户名:
-        {{ form.username(class="form-control") }}
-        密码:
-        {{ form.password(class="form-control") }}
-    <br />
-    <div class="controls">
-        <button class="btn btn-default">登录</button>
-    </div>
-</div>
+<hr align="left" width="30%">
+{% from "_formhelpers.html" import render_field %}
+<form method=post action="/handle_login" >
+    {{ render_field(form.username, class="form-control", placeholder="支持用户名/邮箱") }}
+    {{ render_field(form.password, class="form-control") }}
+  <p><input type=submit value="登录" class="btn btn-default">
+</form>
 
 {% endblock %}
