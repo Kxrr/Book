@@ -16,6 +16,7 @@ class User(DynamicDocument):
     real_name = StringField()
     borrowed_book = ListField(ReferenceField('BookInfo'))
     role = StringField(default='staff')
+    owned_book = ListField(ReferenceField('BookInfo'))
 
     def is_authenticated(self):
         return True
@@ -77,7 +78,7 @@ class BookInfo(DynamicDocument):
 
 class Operation(DynamicDocument):
     """
-    @summary: 记录每一次操作
+    @summary: 记录每一次操作, 不到万不得以不调用
     """
     type = StringField()
     user = ReferenceField(User)
@@ -102,5 +103,3 @@ class Delivery(DynamicDocument):
     return_time = DateTimeField()
     returned = BooleanField(default=False)
 
-# import ipdb; ipdb.set_trace()
-# print ''

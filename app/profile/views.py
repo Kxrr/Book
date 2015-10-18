@@ -15,6 +15,7 @@ def profile_info():
     now = datetime.now()
     return render_template('profile.html', books=user_borrowed_books, user=user_obj, deliverys=deliverys, now=now)
 
+
 @profile.route('/return_book/<string:book_id>')
 @login_required
 def return_book(book_id):
@@ -32,11 +33,13 @@ def return_book(book_id):
         flash(u'非法操作')
         return redirect('/')
 
+
 @profile.route('/Profile/<string:id>')
 def user_info(id):
     user = User.objects(id=id).first()
     deliverys = Delivery.objects(user=user)
     return render_template('profile_pub.html', user=user, deliverys=deliverys)
+
 
 @profile.errorhandler(401)
 def un_authorized(e):

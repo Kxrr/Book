@@ -22,7 +22,7 @@ class JdSpider(BasicSpider):
     """
     http://book.jd.com/
     """
-
+    pass
 
 class DoubanSpider(BasicSpider):
     def parse_content(self):
@@ -48,11 +48,12 @@ class DoubanSpider(BasicSpider):
             img_url = ''
         category = ''  # TODO:
         try:
-            BookInfo(title=title, author=author, rate=rate, detail=detail, tags=tags,
+            new_book = BookInfo(title=title, author=author, rate=rate, detail=detail, tags=tags,
                      category=category, raw_url=self.url,
                      owner=User.objects.get(id=self.owner_id), img_url=img_url).save()
+            User.objects(id=self.owner_id).first().update(push__owned_book=new_book)
             return True
-        except NotUniqueError,e:
+        except NotUniqueError:
             flash(u'这本书己经添加过了')
             return False
 
@@ -70,11 +71,12 @@ class DoubanReadSpider(BasicSpider):
         category = ''
         img_url = self.html.xpath('//div[@class="cover shadow-cover"]/img/@src')[0]
         try:
-            BookInfo(title=title, author=author, rate=rate, detail=detail, tags=tags,
+            new_book = BookInfo(title=title, author=author, rate=rate, detail=detail, tags=tags,
                      category=category, raw_url=self.url,
                      owner=User.objects.get(id=self.owner_id), img_url=img_url).save()
+            User.objects(id=self.owner_id).first().update(push__owned_book=new_book)
             return True
-        except NotUniqueError,e:
+        except NotUniqueError:
             flash(u'这本书己经添加过了')
             return False
 

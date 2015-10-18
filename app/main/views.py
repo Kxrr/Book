@@ -49,7 +49,7 @@ def borrow_book(book_id):
     return redirect('/')
 
 
-@main.route('/Detail/<string:book_id>')
+@main.route('/Detail/<string:book_id>')  # TODO:分离detail和comment到/detail
 def book_detail(book_id):
     book_obj = BookInfo.objects(id=book_id).first()
     delivers = Delivery.objects(book=book_obj)
@@ -87,6 +87,7 @@ def handle_comment():
 @login_required
 def test_1():
     return '--'
+
 
 @main.errorhandler(401)
 def un_authorized(e):

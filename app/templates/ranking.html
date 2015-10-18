@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>排行榜</h2>
+
+
+<h3>贡献</h3>
+{% if owns %}
+{% for own in owns %}
+    <p>{{ own[0] }} {{ own[1] }}</p>
+{% endfor %}
+{% endif %}
+
+
+<h3>爱读书</h3>
+{% if reads %}
+{% for read in reads %}
+    <p>{{ read[0] }} {{ read[1] }}</p>
+{% endfor %}
+{% endif %}
+
+
+{% if pops %}
+<h3>受欢迎</h3>
+{% for pop in pops %}
+    <p>{{ pop[0] }} {{ pop[1] }}</p>
+{% endfor %}
+{% endif %}
+
+
+
+{% endblock %}
