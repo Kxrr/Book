@@ -2,6 +2,7 @@
 
 from flask import Blueprint
 
-statics = Blueprint('statics', __name__)
+manager = Blueprint('manager', __name__)
 
 from . import views
+

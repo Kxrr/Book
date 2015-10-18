@@ -5,17 +5,17 @@ from app.models import BookInfo, User, Operation
 from app.utils.spiders import DoubanSpider, DoubanReadSpider, JdSpider
 from flask.ext.login import login_required, current_user
 
-from . import backgroud
+from . import manager
 
-@backgroud.route('/Manager')
+@manager.route('/Manager')
 @login_required
-def manager():
+def manager_index():
     if current_user.is_active():  # TODO: 管理role
         books = BookInfo.objects
         users = User.objects(id__ne=current_user.id)
         return render_template('manager.html', books=books, current_user=current_user, users=users)
 
-@backgroud.route('/add_from_url', methods=['POST'])
+@manager.route('/add_from_url', methods=['POST'])
 def add_from_url():
     raw_url = request.form['raw_url']
     owner_id = request.form['owner']
@@ -46,6 +46,6 @@ def add_from_url():
                   user=User.objects.get(id=current_user.id)).save()
         return redirect('/Manager')
 
-@backgroud.route('/add_by_input', methods=['POST'])
+@manager.route('/add_by_input', methods=['POST'])
 def add_by_input():
     pass

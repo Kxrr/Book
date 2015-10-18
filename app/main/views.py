@@ -48,14 +48,6 @@ def borrow_book(book_id):
         flash(u'失败, 请登录后再操作')
     return redirect('/')
 
-
-@main.route('/Detail/<string:book_id>')  # TODO:分离detail和comment到/detail
-def book_detail(book_id):
-    book_obj = BookInfo.objects(id=book_id).first()
-    delivers = Delivery.objects(book=book_obj)
-    return render_template('detail.html', book=book_obj, delivers=delivers)
-
-
 @main.route('/Search', methods=['POST'])
 def handle_search():
     keyword = request.form['keyword'].strip()
@@ -69,18 +61,7 @@ def filter_shelf():
     users = User.objects
     return render_template('index.html', books=books, user=current_user, all_books=all_books, users=users, page=1)
 
-@main.route('/handle_comment', methods=['POST'])
-@login_required
-def handle_comment():
-    form = request.form
-    content = request.form['content']
-    book_id = request.form['book_id']
-    user = User.objects(id=current_user.id).first()
-    book = BookInfo.objects(id=book_id).first()
-    comment = Comment(content=content, name=user)
-    book.update(push__comment=comment)
-    flash(u'评论成功')
-    return redirect('/Detail/{}'.format(book_id))
+
 
 
 @main.route('/test_1')
