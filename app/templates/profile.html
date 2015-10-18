@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-
+<div><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Dear {{ user.nickname }}, 感谢你为小伙伴们提供了{{ owned_books.count() }}本小人书, 得到回馈{{ deliverys.count() }}本大人书</div>
 <h3>己借书籍</h3>
 
 <div class="table-responsive">
@@ -9,7 +9,9 @@
     <thead>
     <tr>
         <th>书名</th>
+        <th>借阅日期</th>
         <th>应归还时间</th>
+        <th>剩余时间</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -19,9 +21,9 @@
             <tr>
 
             <td><a href="/Detail/{{ book.id }}">{{ book.title }}</a></td>
-            <td> {{ deliverys.filter(book=book).first().deadline.strftime('%Y-%m-%d') }}
-            还有{{ (deliverys.filter(book=book).first().deadline - now).days }}天
-            </td>
+            <td>{{ deliverys.filter(book=book).first().borrow_time.strftime('%Y-%m-%d') }}</td>
+            <td> {{ deliverys.filter(book=book).first().deadline.strftime('%Y-%m-%d') }}</td>
+            <td>{{ (deliverys.filter(book=book).first().deadline - now).days }}天</td>
             <td>
                 <a href="/return_book/{{ book.id }}">还书</a>
             </td>
@@ -31,4 +33,29 @@
     </tbody>
 </table>
 </div>
+<br />
+<h3>贡献书籍</h3>
+
+<div class="table-responsive">
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>书名</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        {% for owned_book in owned_books %}
+            <tr>
+
+            <td><a href="/Detail/{{ owned_book.id }}">{{ owned_book.title }}</a></td>
+
+
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+
 {% endblock %}

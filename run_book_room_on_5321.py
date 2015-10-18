@@ -18,5 +18,8 @@ app.run(port=5321)
 # unauthor...page | Done
 # unique error | done
 # search result highlight | Done
+# sum | Done
 
-# sum
+# 多本书
+# 多个文档首页不好处理
+# 一个文档多个字段需要dec

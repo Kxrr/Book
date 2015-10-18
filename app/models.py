@@ -50,6 +50,7 @@ class Comment(EmbeddedDocument):
     time = DateTimeField(default=datetime.now())
     meta = {'ordering': ['-time', '-id']}
 
+
 class BookInfo(DynamicDocument):
     """
     @summary: 书的信息

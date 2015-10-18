@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 {% if user.is_active %}
-<div>你好, {{ user.nickname }} | <a href="/MyInfo">个人书架</a> | <a href="/handle_logout">登出</a>
+<div>你好, {{ user.nickname }} | <a href="/MyInfo">我的书籍</a> | <a href="/handle_logout">登出</a>
 {#{% if user.role == 'admin' %}#}
 {#    | <a href="/Manager">管理入口</a>#}
 {#{% endif %}#}
@@ -48,6 +48,7 @@
         <th>标签</th>
         <th>状态</th>
         <th>操作</th>
+        <th>贡献者</th>
     </tr>
     </thead>
 
@@ -64,17 +65,17 @@
                 {% if book.on_bookshelf %}
                     在架
                 {% else %}
-                    己被<a href="/Profile/{{ book.user_borrowed.id }}" title="去看{{ book.user_borrowed.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ book.user_borrowed.nickname }} </a>借走
+                    <a href="/Profile/{{ book.user_borrowed.id }}" title="去看{{ book.user_borrowed.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ book.user_borrowed.nickname }} </a>在读
                 {% endif %}
             </td>
             <td>
             {% if book.on_bookshelf %}
-                <a href="/borrow_book/{{ book.id }}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> 借阅</a>
+                <a href="/borrow_book/{{ book.id }}">想读</a>
             {% else %}
-                <s>借阅</s>
+                <s>想读</s>
             {% endif %}
             </td>
-
+            <td>{{ book.owner.nickname }}</td>
             </tr>
         {% endfor %}
     </tbody>

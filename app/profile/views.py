@@ -9,11 +9,13 @@ from datetime import datetime
 
 @profile.route('/MyInfo')
 def profile_info():
-    user_obj = User.objects(id=current_user.id).first()
+    user_obj = User.objects.get(id=current_user.id)
     user_borrowed_books = user_obj.borrowed_book
     deliverys = Delivery.objects(user=user_obj)
+    owned_books = BookInfo.objects(owner=user_obj)
     now = datetime.now()
-    return render_template('profile.html', books=user_borrowed_books, user=user_obj, deliverys=deliverys, now=now)
+    return render_template('profile.html', books=user_borrowed_books, owned_books=owned_books,
+                           user=user_obj, deliverys=deliverys, now=now)
 
 
 @profile.route('/return_book/<string:book_id>')
@@ -38,7 +40,8 @@ def return_book(book_id):
 def user_info(id):
     user = User.objects(id=id).first()
     deliverys = Delivery.objects(user=user)
-    return render_template('profile_pub.html', user=user, deliverys=deliverys)
+    owned_books = BookInfo.objects(owner=user)
+    return render_template('profile_pub.html', user=user, deliverys=deliverys, owned_books=owned_books)
 
 
 @profile.errorhandler(401)
