@@ -1,10 +1,10 @@
 #-*- coding: utf-8 -*-                                                                                     
 
-from flask import render_template, request, redirect, url_for, flash
-from app.models import BookInfo, User
-from app.user.forms import RegisterForm, LoginForm
+from flask import render_template, request, redirect, flash
+from app.models import  User
+from app.login.forms import RegisterForm, LoginForm
 from app import lm
-from . import user
+from . import login
 
 from flask.ext.login import login_user, logout_user
 
@@ -18,12 +18,12 @@ def load_user(id):
     else:
         return ''
 
-@user.route('/Register')
+@login.route('/Register')
 def register():
     register_form = RegisterForm()
     return render_template('register.html', form=register_form)
 
-@user.route('/handle_register', methods=['POST'])
+@login.route('/handle_register', methods=['POST'])
 def handle_register():
     register_form_info = RegisterForm(request.form)
     if register_form_info.validate():
@@ -41,12 +41,12 @@ def handle_register():
         flash(u'信息不对')
         return redirect('/Register')
 
-@user.route('/Login')
-def login():
+@login.route('/Login')
+def login_index():
     login_form = LoginForm()
     return render_template('login.html', form=login_form)
 
-@user.route('/handle_login', methods=['POST'])
+@login.route('/handle_login', methods=['POST'])
 def handle_login():
     login_form_info = LoginForm(request.form)
     if login_form_info.validate():
@@ -67,7 +67,7 @@ def handle_login():
         flash(u'非法输入')
         return redirect('/Login')
 
-@user.route('/handle_logout')
+@login.route('/handle_logout')
 def handle_logout():
     logout_user()
     flash(u'己登出')

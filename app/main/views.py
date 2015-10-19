@@ -110,7 +110,6 @@ def test_1():
 @main.errorhandler(401)
 def un_authorized(e):
     flash(u'此操作需要登录')
-    # return redirect(url_for('user.login')), 401
     return redirect('/Login')
 
 
