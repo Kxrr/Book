@@ -6,6 +6,7 @@ from app.models import BookInfo, User, Operation, Delivery
 from . import main
 from flask.ext.login import current_user, login_required
 
+from app.utils import amount_fake_aggregation
 from app.utils.search_mongo import search
 
 page_limit = 7
@@ -15,8 +16,10 @@ def index():
     book_count = BookInfo.objects.count()
     books = BookInfo.objects.limit(page_limit)
     users = User.objects
+    book_amount = amount_fake_aggregation.count_all()
+    book_out = Delivery.objects(returned__ne=True).count()
     return render_template('index.html', books=books, user=current_user, all_books=books, users=users,
-                           page=(book_count/page_limit)+2, current_page=1)
+                           page=(book_count/page_limit)+2, current_page=1, book_amount=book_amount, book_out=book_out)
 
 @main.route('/page/<string:n>')
 def index_page(n):
@@ -34,16 +37,16 @@ def borrow_book(book_id):
     if current_user.is_active:
         book_obj = BookInfo.objects(id=book_id).first()
         user_online_obj = User.objects(id=current_user.id).first()  # Watch out, current_user is <class 'werkzeug.local.LocalProxy'>
-        print type(user_online_obj)
-        book_obj.update(set__on_bookshelf=False, user_borrowed=user_online_obj)
-        user_online_obj.update(push__borrowed_book=book_obj)
+        if book_obj not in user_online_obj.borrowed_book:
+            book_obj.update(dec__num=1, push__user_borrowed=user_online_obj)
+            user_online_obj.update(push__borrowed_book=book_obj)
 
-        Operation(type='borrow', user=user_online_obj, book_info=book_obj).save()
-        Delivery(user=user_online_obj, book=book_obj).save()
-
-        # TODO: 设置归还时间 | done
-        # 异常处理
-        flash(u'「{}」, 借阅成功'.format(book_obj.title))
+            Operation(type='borrow', user=user_online_obj, book_info=book_obj).save()
+            Delivery(user=user_online_obj, book=book_obj).save()
+            # 异常处理
+            flash(u'「{}」, 借阅成功'.format(book_obj.title))
+        else:
+            flash(u'失败, 同一本书每人只能借一本')
     else:
         flash(u'失败, 请登录后再操作')
     return redirect('/')
@@ -57,7 +60,7 @@ def handle_search():
 @main.route('/filter/on_bookshelf')
 def filter_shelf():
     all_books = BookInfo.objects
-    books = all_books.filter(on_bookshelf=True)
+    books = all_books.filter(num__gt=0)
     users = User.objects
     return render_template('index.html', books=books, user=current_user, all_books=all_books, users=users, page=1)
 

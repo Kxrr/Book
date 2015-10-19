@@ -24,9 +24,9 @@ def return_book(book_id):
     user_obj = User.objects(id=current_user.id).first()
     book_obj = BookInfo.objects(id=book_id).first()
 
-    if book_obj.user_borrowed.id == user_obj.id:
+    if user_obj in book_obj.user_borrowed:
         user_obj.update(pull__borrowed_book=book_obj)
-        book_obj.update(on_bookshelf=True, unset__user_borrowed=1)
+        book_obj.update(inc__num=1, pull__user_borrowed=user_obj)
         flash(u'「{}」, 归还成功'.format(book_obj.title))
         Operation(type='return', user=user_obj, book_info=book_obj).save()
         Delivery.objects(user=user_obj, book=book_obj).update(set__return_time=datetime.now(), set__returned=True)

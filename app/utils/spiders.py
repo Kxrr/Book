@@ -47,15 +47,17 @@ class DoubanSpider(BasicSpider):
         except:
             img_url = ''
         category = ''  # TODO:
-        try:
+        if not BookInfo.objects(title=title, author=author):
             new_book = BookInfo(title=title, author=author, rate=rate, detail=detail, tags=tags,
-                     category=category, raw_url=self.url,
-                     owner=User.objects.get(id=self.owner_id), img_url=img_url).save()
+                                category=category, raw_url=self.url,
+                                img_url=img_url).save()
+            new_book.update(push__owner=User.objects.get(id=self.owner_id))
             User.objects(id=self.owner_id).first().update(push__owned_book=new_book)
             return True
-        except NotUniqueError:
-            flash(u'这本书己经添加过了')
-            return False
+        else:
+            exist_book = BookInfo.objects(title=title)
+            add_book = exist_book.update(push__owner=User.objects.get(id=self.owner_id), inc__num=1)
+            return True
 
 
 class DoubanReadSpider(BasicSpider):

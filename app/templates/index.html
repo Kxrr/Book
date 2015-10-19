@@ -18,7 +18,7 @@
 {% endif %}
 
 {## TODO: simplify all_books, users    #}
-<div>目前共有{{ all_books.count() }}本书, 出借{{ all_books.count() - all_books.filter(on_bookshelf=True).count() }}本; 有{{ users.count() }}位用户</div>
+<div>目前共有{{ book_amount }}本书, 出借{{ book_out }}本; 有{{ users.count() }}位用户</div>
 <br />
 <form class="form-inline" action="/Search" method="post">
   <div class="form-group">
@@ -62,20 +62,28 @@
                 {% endfor %}
             </td>
             <td>
-                {% if book.on_bookshelf %}
-                    在架
+                {% if book.num %}
+                    在架({{ book.num }}本)
                 {% else %}
-                    <a href="/Profile/{{ book.user_borrowed.id }}" title="去看{{ book.user_borrowed.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ book.user_borrowed.nickname }} </a>在读
+                    没有了<br />
+                    {% for each_borrowed_user in book.user_borrowed %}
+                        <p><a href="/Profile/{{ each_borrowed_user.id }}" title="去看{{ each_borrowed_user.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ each_borrowed_user.nickname }} </a>在读</p>
+                    {% endfor %}
                 {% endif %}
             </td>
             <td>
-            {% if book.on_bookshelf %}
+
+            {% if book.num %}
                 <a href="/borrow_book/{{ book.id }}">想读</a>
             {% else %}
                 <s>想读</s>
             {% endif %}
             </td>
-            <td>{{ book.owner.nickname }}</td>
+            <td>
+            {% for each_owner in book.owner %}
+            {{ each_owner.nickname }}
+            {% endfor %}
+            </td>
             </tr>
         {% endfor %}
     </tbody>

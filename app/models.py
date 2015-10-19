@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*
 
 from mongoengine import DynamicDocument, EmbeddedDocument, connect, StringField, ListField, FloatField, \
-    DateTimeField, BooleanField, ReferenceField, EmbeddedDocumentField
+    DateTimeField, BooleanField, ReferenceField, EmbeddedDocumentField, IntField
 from flask.ext.mongoengine.wtf import model_form
 from datetime import datetime, timedelta
 
@@ -64,10 +64,11 @@ class BookInfo(DynamicDocument):
     raw_url = StringField()
     img_url = StringField()
     update_time = DateTimeField(default=datetime.now())
-    on_bookshelf = BooleanField(default=True)
-    owner = ReferenceField(User)
+    # on_bookshelf = BooleanField(default=True)
+    num = IntField(default=1)  # 书籍数量, 就对多本相同书属于不同的人
+    owner = ListField(ReferenceField(User))  # 同上
 
-    user_borrowed = ReferenceField(User)
+    user_borrowed = ListField(ReferenceField(User))  # 哪些人正在借
 
     comment = ListField(EmbeddedDocumentField(Comment))
 
@@ -93,7 +94,7 @@ class Operation(DynamicDocument):
 
 class Delivery(DynamicDocument):
     """
-    @summary: 书籍记录和归还时间
+    @summary: 书籍记录和归还时间, 采用单条文档的方式
     """
     borrow_time = DateTimeField(default=datetime.now())
     deadline = DateTimeField(default=datetime.now() + timedelta(days=30))  # 设置一个月后归还
