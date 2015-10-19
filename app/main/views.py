@@ -11,6 +11,7 @@ from app.utils.search_mongo import search
 
 page_limit = 7
 
+
 @main.route('/')
 def index():
     book_count = BookInfo.objects.count()
@@ -21,6 +22,7 @@ def index():
     return render_template('index.html', books=books, user=current_user, all_books=books, users=users,
                            page=(book_count/page_limit)+2, current_page=1, book_amount=book_amount, book_out=book_out)
 
+
 @main.route('/page/<string:n>')
 def index_page(n):
     # TODO: 分页实现的优化
@@ -28,8 +30,12 @@ def index_page(n):
     book_count = BookInfo.objects.count()
     books = BookInfo.objects.skip(skip).limit(page_limit)
     users = User.objects
+    book_amount = amount_fake_aggregation.count_all()
+    book_out = Delivery.objects(returned__ne=True).count()
     return render_template('index.html', books=books, user=current_user, all_books=books, users=users,
-                           page=(book_count/page_limit)+2, current_page=int(n))
+                           page=(book_count/page_limit)+2, current_page=int(n),
+                           book_amount=book_amount, book_out=book_out)
+
 
 @main.route('/borrow_book/<string:book_id>')
 @login_required
@@ -51,6 +57,7 @@ def borrow_book(book_id):
         flash(u'失败, 请登录后再操作')
     return redirect('/')
 
+
 @main.route('/want_book/<string:book_id>')
 @login_required
 def want_book(book_id):
@@ -59,6 +66,7 @@ def want_book(book_id):
     user.update(push__wanted_book=book)
     flash(u'「{}」, 收藏成功, 有书时会发送邮件通知(其实目前还没有)'.format(book.title))
     return redirect('/')
+
 
 @main.route('/pull_want_book/<string:book_id>')
 @login_required
@@ -69,11 +77,13 @@ def pull_want_book(book_id):
     flash(u'「{}」, 取消收藏成功'.format(book.title))
     return redirect('/')
 
+
 @main.route('/Search', methods=['POST'])
 def handle_search():
     keyword = request.form['keyword'].strip()
     results = search(keyword)
     return render_template('search_result.html', results=results, keyword=keyword, user=current_user)
+
 
 @main.route('/filter/on_bookshelf')
 def filter_shelf():
