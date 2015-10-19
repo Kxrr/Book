@@ -87,6 +87,8 @@
                 {% else %}
                     <a href="/borrow_book/{{ book.id }}">借阅</a>
                 {% endif %}
+            {% elif book in user.wanted_book %}
+                <a href="/pull_want_book/{{ book.id }}" title="不想读了">不想读了</a>
             {% else %}
                 <a href="/want_book/{{ book.id }}">想读</a>
             {% endif %}

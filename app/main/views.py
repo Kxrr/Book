@@ -57,7 +57,16 @@ def want_book(book_id):
     book = BookInfo.objects.get(id=book_id)
     user = User.objects.get(id=current_user.id)
     user.update(push__wanted_book=book)
-    flash(u'「{}」, 收藏成功, 有书时会发送邮件通知'.format(book.title))
+    flash(u'「{}」, 收藏成功, 有书时会发送邮件通知(其实目前还没有)'.format(book.title))
+    return redirect('/')
+
+@main.route('/pull_want_book/<string:book_id>')
+@login_required
+def pull_want_book(book_id):
+    book = BookInfo.objects.get(id=book_id)
+    user = User.objects.get(id=current_user.id)
+    user.update(pull__wanted_book=book)
+    flash(u'「{}」, 取消收藏成功'.format(book.title))
     return redirect('/')
 
 @main.route('/Search', methods=['POST'])
