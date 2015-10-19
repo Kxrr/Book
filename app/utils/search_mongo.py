@@ -11,7 +11,7 @@ def search(keyword):
         result = []
         s_title = BookInfo.objects(title__icontains=keyword)
         s_author = BookInfo.objects(author__icontains=keyword)
-        s_tags = BookInfo.objects(tags=keyword)
+        s_tags = BookInfo.objects(tags__contains=keyword)
         result += s_title
         result += s_author
         result += s_tags

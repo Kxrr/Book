@@ -51,6 +51,15 @@ def borrow_book(book_id):
         flash(u'失败, 请登录后再操作')
     return redirect('/')
 
+@main.route('/want_book/<string:book_id>')
+@login_required
+def want_book(book_id):
+    book = BookInfo.objects.get(id=book_id)
+    user = User.objects.get(id=current_user.id)
+    user.update(push__wanted_book=book)
+    flash(u'「{}」, 收藏成功, 有书时会发送邮件通知'.format(book.title))
+    return redirect('/')
+
 @main.route('/Search', methods=['POST'])
 def handle_search():
     keyword = request.form['keyword'].strip()
@@ -64,7 +73,13 @@ def filter_shelf():
     users = User.objects
     return render_template('index.html', books=books, user=current_user, all_books=all_books, users=users, page=1)
 
-
+# @main.route('/redirect/<url>')
+# def redirect_url(url):
+#     print url
+#     if 'http' in url:
+#         return redirect(url)
+#     else:
+#         return redirect('http://' + url)
 
 
 @main.route('/test_1')

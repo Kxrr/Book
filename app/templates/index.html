@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 {% if user.is_active %}
-<div>你好, {{ user.nickname }} | <a href="/MyInfo">我的书籍</a> | <a href="/handle_logout">登出</a>
+<div>你好, {{ user.nickname }} | <a href="/MyInfo">我的书籍</a>
 {#{% if user.role == 'admin' %}#}
 {#    | <a href="/Manager">管理入口</a>#}
 {#{% endif %}#}
 | <a href="/Manager">管理入口</a>
 | <span class="glyphicon glyphicon-star" aria-hidden="true"></span><a href="/Ranking">排行榜</a>
-
+| <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><a href="/handle_logout">登出</a>
 
 </div>
 {% else %}
@@ -63,9 +63,13 @@
             </td>
             <td>
                 {% if book.num %}
-                    在架({{ book.num }}本)
+                    {% if book.online_url %}
+                        PDF版本
+                    {% else %}
+                        在架({{ book.num }}本)
+                    {% endif %}
                 {% else %}
-                    没有了<br />
+                    没了
                     {% for each_borrowed_user in book.user_borrowed %}
                         <p><a href="/Profile/{{ each_borrowed_user.id }}" title="去看{{ each_borrowed_user.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ each_borrowed_user.nickname }} </a>在读</p>
                     {% endfor %}
@@ -74,9 +78,17 @@
             <td>
 
             {% if book.num %}
-                <a href="/borrow_book/{{ book.id }}">想读</a>
+                {% if book.online_url %}
+                    {% if 'http' not in book.online_url %}
+                        <a href="http://{{ book.online_url }}" target="_blank">在线查看</a>
+                    {% else %}
+                        <a href="{{ book.online_url }}" target="_blank">在线查看</a>
+                    {% endif %}
+                {% else %}
+                    <a href="/borrow_book/{{ book.id }}">借阅</a>
+                {% endif %}
             {% else %}
-                <s>想读</s>
+                <a href="/want_book/{{ book.id }}">想读</a>
             {% endif %}
             </td>
             <td>

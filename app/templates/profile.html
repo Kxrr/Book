@@ -58,5 +58,28 @@
 </table>
 </div>
 
+<br />
+<h3>想读书籍</h3>
+
+<div class="table-responsive">
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>书名</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        {% for wanted_book in user.wanted_book %}
+            <tr>
+
+            <td><a href="/Detail/{{ wanted_book.id }}">{{ wanted_book.title }}</a></td>
+
+
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
 
 {% endblock %}

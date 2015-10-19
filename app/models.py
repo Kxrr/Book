@@ -17,6 +17,7 @@ class User(DynamicDocument):
     borrowed_book = ListField(ReferenceField('BookInfo'))
     role = StringField(default='staff')
     owned_book = ListField(ReferenceField('BookInfo'))
+    wanted_book = ListField(ReferenceField('BookInfo'))  # 没有书时的收藏功能
 
     def is_authenticated(self):
         return True
@@ -62,6 +63,7 @@ class BookInfo(DynamicDocument):
     tags = ListField(StringField())
     category = StringField()
     raw_url = StringField()
+    online_url = StringField()
     img_url = StringField()
     update_time = DateTimeField(default=datetime.now())
     # on_bookshelf = BooleanField(default=True)

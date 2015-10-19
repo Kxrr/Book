@@ -6,7 +6,7 @@ from app.user.forms import RegisterForm, LoginForm
 from app import lm
 from . import user
 
-from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask.ext.login import login_user, logout_user
 
 
 
@@ -34,9 +34,9 @@ def handle_register():
             new_user = User(username=register_form_info.username.data, password=register_form_info.password.data,
                             nickname=register_form_info.nickname.data, email=register_form_info.email.data)
             new_user.save()
-            flash(u'注册成功, 自动登录还没做, 自个登吧')
-            # TODO: 需要自动登录
-            return redirect('/Login')
+            login_user(user=new_user, remember=True)
+            flash(u'注册成功, 登录成功')
+            return redirect('/')
     else:
         flash(u'信息不对')
         return redirect('/Register')

@@ -18,9 +18,10 @@ def manager_index():
 @manager.route('/add_from_url', methods=['POST'])
 def add_from_url():
     raw_url = request.form['raw_url']
+    online_url = request.form['online_url']
     owner_id = request.form['owner']
     if 'book.douban' in raw_url:
-        spider = DoubanSpider(url=raw_url, owner_id=owner_id)
+        spider = DoubanSpider(url=raw_url, owner_id=owner_id, online_url=online_url)
         spider.crawl()
         parse = spider.parse_content()
         if parse:
@@ -29,7 +30,7 @@ def add_from_url():
                   user=User.objects.get(id=current_user.id)).save()
         return redirect('/Manager')
     elif 'read.douban' in raw_url:
-        spider = DoubanReadSpider(url=raw_url, owner_id=owner_id)
+        spider = DoubanReadSpider(url=raw_url, owner_id=owner_id, online_url=online_url)
         spider.crawl()
         parse = spider.parse_content()
         if parse:
