@@ -35,7 +35,7 @@ class User(DynamicDocument):
             self.real_name = self.nickname
         return super(User, self).save(*args, **kwargs)
 
-    def __repr__(self):
+    def __unicode__(self):
         return self.username
 
     meta = {'ordering': ['+nickname']}
@@ -75,9 +75,6 @@ class BookInfo(DynamicDocument):
 
     meta = {'ordering': ['-update_time', '-id']}
 
-    def __repr__(self):
-        return self.raw_url
-
     def __unicode__(self):
         return self.title
 
@@ -109,3 +106,6 @@ class Delivery(DynamicDocument):
     return_time = DateTimeField()
     returned = BooleanField(default=False)
 
+if __name__ == '__main__':
+    import ipdb; ipdb.set_trace()
+    print ''

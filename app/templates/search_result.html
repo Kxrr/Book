@@ -15,34 +15,59 @@
 
 <div class="table-responsive">
 <table class="table table-hover">
+
     <thead>
     <tr>
         <th>书名</th>
         <th>作者</th>
         <th>标签</th>
+        <th>状态</th>
         <th>操作</th>
+
     </tr>
     </thead>
 
     <tbody>
         {% for book in results %}
             <tr>
-
-
-
-            <td><a href="/Detail/{{ book.id }}">{{ book.title }}</a></td>
+            <td><a href="/Detail/{{ book.id }}" title="详情">{{ book.title }}</a></td>
             <td> {{ book.author }} </td>
             <td>{% for tag in book.tags %}
                 {{ tag }}
                 {% endfor %}
             </td>
             <td>
-                {% if user.is_active %}
-                    <a href="/borrow_book/{{ book.id }}">借阅</a>
+                {% if book.num %}
+                    {% if book.online_url %}
+                        PDF版本
+                    {% else %}
+                        在架({{ book.num }}本)
+                    {% endif %}
+                {% else %}
+                    没了
+                    {% for each_borrowed_user in book.user_borrowed %}
+                        <p><a href="/Profile/{{ each_borrowed_user.id }}" title="去看{{ each_borrowed_user.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ each_borrowed_user.nickname }} </a>在读</p>
+                    {% endfor %}
                 {% endif %}
             </td>
+            <td>
 
-
+            {% if book.num %}
+                {% if book.online_url %}
+                    {% if 'http' not in book.online_url %}
+                        <a href="http://{{ book.online_url }}" target="_blank">在线查看</a>
+                    {% else %}
+                        <a href="{{ book.online_url }}" target="_blank">在线查看</a>
+                    {% endif %}
+                {% else %}
+                    <a href="/borrow_book/{{ book.id }}">借阅</a>
+                {% endif %}
+            {% elif book in user.wanted_book %}
+                <a href="/pull_want_book/{{ book.id }}" title="不想读了">不想读了</a>
+            {% else %}
+                <a href="/want_book/{{ book.id }}">想读</a>
+            {% endif %}
+            </td>
 
             </tr>
         {% endfor %}
