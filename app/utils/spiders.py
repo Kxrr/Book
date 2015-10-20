@@ -7,7 +7,7 @@ from re import search
 
 class BasicSpider(object):
     def __init__(self, url, owner_id, online_url=''):
-        self.url = url
+        self.url = url.strip()
         self.owner_id = owner_id
         self.online_url = online_url
         self.content = ''
@@ -27,6 +27,9 @@ class BasicSpider(object):
         self.html = etree.HTML(self.content)
 
     def save(self):
+        if len(self.tags) > 4:
+            self.tags = self.tags[0:4]
+
         self.new_book = BookInfo(title=self.title, author=self.author, rate=self.rate,
                                  detail=self.detail, tags=self.tags, category=self.category,
                                  raw_url=self.url, online_url=self.online_url, img_url=self.img_url).save()

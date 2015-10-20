@@ -9,13 +9,14 @@ from flask.ext.login import current_user, login_required
 from app.utils import amount_fake_aggregation
 from app.utils.search_mongo import search
 
-page_limit = 7
+page_limit = 10
 
 
 @main.route('/')
 def index():
     book_count = BookInfo.objects.count()
     books = BookInfo.objects.limit(page_limit)
+    # user = User.objects.get(id=current_user.id)
     users = User.objects
     book_amount = amount_fake_aggregation.count_all()
     book_out = Delivery.objects(returned__ne=True).count()

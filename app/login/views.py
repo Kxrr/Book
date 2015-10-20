@@ -40,7 +40,7 @@ def handle_register():
             flash(u'注册成功, 登录成功')
             return redirect('/')
     else:
-        flash(u'信息不对')
+        flash(u'用户名或密码不符合要求')
         return redirect('/Register')
 
 

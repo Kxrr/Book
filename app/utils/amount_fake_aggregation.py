@@ -5,7 +5,6 @@
 """
 from app.models import BookInfo
 
-
 def count_all():
     sum_list = []
     for each in BookInfo.objects:
