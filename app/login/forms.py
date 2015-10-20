@@ -1,5 +1,8 @@
 #-*- coding: utf-8 -*-
 
+"""
+Flask Wtf : http://docs.pythontab.com/flask/flask0.10/patterns/wtforms.html
+"""
 from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, SubmitField, TextField, validators, BooleanField
 from wtforms.validators import Required, Length

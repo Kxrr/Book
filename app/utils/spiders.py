@@ -3,7 +3,7 @@
 import requests
 from lxml import etree
 from app.models import BookInfo, User
-
+from re import search
 
 class BasicSpider(object):
     def __init__(self, url, owner_id, online_url=''):
@@ -52,7 +52,8 @@ class DoubanSpider(BasicSpider):
 
         rate = self.html.xpath('//div[@class="rating_wrap"]//strong/text()')  # float
         if rate:
-            self.rate = float(rate[0])
+            if '.' in rate[0]:  # 匹配少于10人评分
+                self.rate = float(rate[0])
 
         img_url = self.html.xpath('//div[@class="article"]//a[@class="nbg"]/img/@src')
         if img_url:

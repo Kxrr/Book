@@ -18,10 +18,12 @@ def load_user(id):
     else:
         return ''
 
+
 @login.route('/Register')
 def register():
     register_form = RegisterForm()
     return render_template('register.html', form=register_form)
+
 
 @login.route('/handle_register', methods=['POST'])
 def handle_register():
@@ -41,10 +43,12 @@ def handle_register():
         flash(u'信息不对')
         return redirect('/Register')
 
+
 @login.route('/Login')
 def login_index():
     login_form = LoginForm()
     return render_template('login.html', form=login_form)
+
 
 @login.route('/handle_login', methods=['POST'])
 def handle_login():
@@ -66,6 +70,7 @@ def handle_login():
     else:
         flash(u'非法输入')
         return redirect('/Login')
+
 
 @login.route('/handle_logout')
 def handle_logout():

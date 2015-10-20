@@ -2,7 +2,6 @@
 
 from mongoengine import DynamicDocument, EmbeddedDocument, connect, StringField, ListField, FloatField, \
     DateTimeField, BooleanField, ReferenceField, EmbeddedDocumentField, IntField
-from flask.ext.mongoengine.wtf import model_form
 from datetime import datetime, timedelta
 
 connect('BookRoom')
