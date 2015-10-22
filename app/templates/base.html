@@ -23,7 +23,7 @@
 
     <div class="col-md-8">
         <div class="page-header">
-          <h1><a class="br-head" href="{{ url_for('main.index') }}">藏经阁</a></h1>
+          <h1><img src="{{ url_for('static',filename='images/pinbot-logo.png') }}" alt="..." class="img-rounded"><a class="br-head" href="{{ url_for('main.index') }}" > 藏经阁</a></h1>
         </div>
     </div>
 </div>
@@ -44,14 +44,17 @@
         {% endwith %}
         </div>
 
-    {% block content %}
-    {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+
     <div>
 
       <br />
       <hr align="left" width="100%">
       <footer class="footer">
         <p>&copy; Pinbot 2015</p>
+        <div style="display:none"> <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1252961930'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1252961930%26show%3Dpic2' type='text/javascript'%3E%3C/script%3E"));</script> </div>
       </footer>
     </div>
     </div>

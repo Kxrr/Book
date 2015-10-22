@@ -2,8 +2,6 @@ Book Room
 =========
 基于Flask与MongoDB的内部图书借阅管理系统
 
-[Demo](http://book.kxrr.us)
-
 ## 特性
 1. 本地用户系统
 2. 从豆瓣添加图书

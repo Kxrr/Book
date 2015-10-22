@@ -44,7 +44,7 @@ def borrow_book(book_id):
     if current_user.is_active:
         book_obj = BookInfo.objects(id=book_id).first()
         user_online_obj = User.objects(id=current_user.id).first()  # Watch out, current_user is <class 'werkzeug.local.LocalProxy'>
-        if book_obj not in user_online_obj.borrowed_book:
+        if (book_obj not in user_online_obj.borrowed_book) and (book_obj.num > 0):
             book_obj.update(dec__num=1, push__user_borrowed=user_online_obj)
             user_online_obj.update(push__borrowed_book=book_obj)
 

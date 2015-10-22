@@ -27,8 +27,8 @@ class BasicSpider(object):
         self.html = etree.HTML(self.content)
 
     def save(self):
-        if len(self.tags) > 4:
-            self.tags = self.tags[0:4]
+        if len(self.tags) > 5:
+            self.tags = self.tags[0:5]
 
         self.new_book = BookInfo(title=self.title, author=self.author, rate=self.rate,
                                  detail=self.detail, tags=self.tags, category=self.category,
@@ -58,7 +58,7 @@ class DoubanSpider(BasicSpider):
             if '.' in rate[0]:  # 匹配少于10人评分
                 self.rate = float(rate[0])
 
-        img_url = self.html.xpath('//div[@class="article"]//a[@class="nbg"]/img/@src')
+        img_url = self.html.xpath('//div[@class="article"]//a[@class="nbg"]/@href')
         if img_url:
             self.img_url = img_url[0]
 

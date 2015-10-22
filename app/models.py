@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*
 
 from mongoengine import DynamicDocument, EmbeddedDocument, connect, StringField, ListField, FloatField, \
-    DateTimeField, BooleanField, ReferenceField, EmbeddedDocumentField, IntField
+    DateTimeField, BooleanField, ReferenceField, EmbeddedDocumentField, IntField, queryset_manager
 from datetime import datetime, timedelta
 
 connect('BookRoom')
@@ -66,6 +66,7 @@ class BookInfo(DynamicDocument):
     img_url = StringField()
     update_time = DateTimeField(default=datetime.now())
     # on_bookshelf = BooleanField(default=True)
+    deleted = BooleanField(default=False)  # 方便实现删除图书操作
     num = IntField(default=1)  # 书籍数量, 就对多本相同书属于不同的人
     owner = ListField(ReferenceField(User))  # 同上
 
@@ -77,6 +78,10 @@ class BookInfo(DynamicDocument):
 
     def __unicode__(self):
         return self.title
+
+    @queryset_manager
+    def objects(doc_cls, queryset):
+        return queryset.filter(deleted__ne=True)
 
 
 class Operation(DynamicDocument):

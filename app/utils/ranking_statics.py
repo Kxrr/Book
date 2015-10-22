@@ -6,7 +6,8 @@
 from app.models import User, BookInfo, Delivery
 
 
-def count_owned():  # 统计有贡献最多图书的人
+def count_owned():
+    # 统计有贡献最多图书的人
     name = []
     count = []
     u_id = []
@@ -19,7 +20,8 @@ def count_owned():  # 统计有贡献最多图书的人
     return result_sorted
 
 
-def count_borrowed():  # 统计借过最多书的人
+def count_borrowed():
+    # 统计借过最多书的人
     name = []
     count = []
     u_id = []
@@ -32,7 +34,8 @@ def count_borrowed():  # 统计借过最多书的人
     return result_sorted
 
 
-def count_pop_book():  # 统计最受欢迎的图书
+def count_pop_book():
+    # 统计最受欢迎的图书
     book_name = []
     count = []
     b_id = []

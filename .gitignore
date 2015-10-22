@@ -1,10 +1,7 @@
 # Python
 *.pyc
-.idea/
-*/.idea/
+.idea
 
 # Mac
-.DS_Store/
-*/.DS_Store/
-
+.DS_Store
 

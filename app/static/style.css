@@ -22,6 +22,19 @@
 
 .highlight { background-color: yellow }
 
+.page-header h1 a{
+color:#777777;
+text-decoration:none;
+}
+.page-header h1 a:hover{
+  color: #666666;
+}
+
+.split{
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
 body {
   /*background: url(/static/images/bg.jpg) no-repeat center center fixed;*/
   background-color: #f7f7f7;
