@@ -2,7 +2,7 @@
 
 from flask import render_template, request, redirect, flash
 from app.models import BookInfo, User, Operation
-from app.utils.spiders import DoubanSpider, DoubanReadSpider, JdSpider
+from app.utils.spiders import DoubanSpider, DoubanReadSpider
 from flask.ext.login import login_required, current_user
 
 from . import manager
@@ -25,18 +25,21 @@ def add_from_url():
         spider.crawl()
         parse = spider.parse_content()
         if parse:
-            flash(u'「%s」, 成功, 感谢小伙伴, 为聘宝添砖加瓦了'% (spider.title))
+            flash(u'感谢小伙伴: {}, 为聘宝添砖加瓦了, 「{}」, 添加成功 '
+                  .format(current_user, spider.content_dict.get('title')))
         Operation(type='add', url_info=raw_url,
-                  user=User.objects.get(id=current_user.id)).save()
+                  user=User.objects.get(id=current_user.id),
+                  success=True if parse else False).save()
         return redirect('/Manager')
     elif 'read.douban' in raw_url:
-        spider = DoubanReadSpider(url=raw_url, owner_id=owner_id, online_url=online_url)
-        spider.crawl()
-        parse = spider.parse_content()
-        if parse:
-            flash(u'「%s」, 成功, 感谢小伙伴, 为聘宝添砖加瓦了'% (spider.title))
-        Operation(type='add', url_info=raw_url,
-                  user=User.objects.get(id=current_user.id)).save()
+        # spider = DoubanReadSpider(url=raw_url, owner_id=owner_id, online_url=online_url)
+        # spider.crawl()
+        # parse = spider.parse_content()
+        # if parse:
+        #     flash(u'「%s」, 成功, 感谢小伙伴, 为聘宝添砖加瓦了'% (spider.title))
+        # Operation(type='add', url_info=raw_url,
+        #           user=User.objects.get(id=current_user.id)).save()
+        flash(u'暂不支持')
         return redirect('/Manager')
 
     elif 'jd' in raw_url:
