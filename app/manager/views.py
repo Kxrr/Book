@@ -25,7 +25,7 @@ def add_from_url():
         spider.crawl()
         parse = spider.parse_content()
         if parse:
-            flash(u'添加成功')
+            flash(u'「%s」, 成功, 感谢小伙伴, 为聘宝添砖加瓦了'% (spider.title))
         Operation(type='add', url_info=raw_url,
                   user=User.objects.get(id=current_user.id)).save()
         return redirect('/Manager')
@@ -34,7 +34,7 @@ def add_from_url():
         spider.crawl()
         parse = spider.parse_content()
         if parse:
-            flash(u'添加成功')
+            flash(u'「%s」, 成功, 感谢小伙伴, 为聘宝添砖加瓦了'% (spider.title))
         Operation(type='add', url_info=raw_url,
                   user=User.objects.get(id=current_user.id)).save()
         return redirect('/Manager')

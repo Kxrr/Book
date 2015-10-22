@@ -106,7 +106,7 @@
             </td>
             <td>
             {% for each_owner in book.owner %}
-            {{ each_owner.nickname }}
+            <a href="/Profile/{{ each_owner.id }}">{{ each_owner.nickname }}</a>
             {% endfor %}
             </td>
             </tr>
