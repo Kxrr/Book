@@ -1,130 +1,140 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div style="float: right;">
+
+
+
+<div class="col-md-4">
+    <div>目前共有{{ book_amount }}本书, 出借{{ book_out }}本; 有{{ users.count() }}位用户</div>
+</div>
+
+<div class="col-md-4"></div>
+
+<div class="col-md-4">
+    {% if user.is_active %}
+        <div>你好, {{ user.nickname }} | <a href="/MyInfo">我的书籍</a>
+        {#{% if user.role == 'admin' %}#}
+        {#    | <a href="/Manager">管理入口</a>#}
+        {#{% endif %}#}
+        | <a href="/Manager" class="split">添加图书</a>
+        | <a href="/Ranking" class="split">排行榜</a>
+        | <a href="/handle_logout" class="split">登出</a>
+        </div>
+    {% else %}
+        <div>
+        <a href="/Login" class="split">登录</a>
+        <a href="/Register" class="split">注册</a>
+        </div>
+    {% endif %}
+</div>
+
+
+
+<div class="col-md-12">
 <br />
-{% if user.is_active %}
-<div>你好, {{ user.nickname }} | <a href="/MyInfo">我的书籍</a>
-{#{% if user.role == 'admin' %}#}
-{#    | <a href="/Manager">管理入口</a>#}
-{#{% endif %}#}
-| <a href="/Manager" class="split">添加图书</a>
-| <a href="/Ranking" class="split">排行榜</a>
-| <a href="/handle_logout" class="split">登出</a>
-
-</div>
-{% else %}
-<div>
-<a href="/Login" class="split">登录</a>
-<a href="/Register" class="split">注册</a>
-</div>        
-{% endif %}
-
-
+    <form class="form-inline" action="/Search" method="post">
+      <div class="form-group">
+        <input type="text" class="form-control" name="keyword" placeholder="请输入关键字">
+      </div>
+      <button type="submit" class="btn btn-default">搜索</button>
+    </form>
 </div>
 
-{## TODO: simplify all_books, users    #}
-<div>目前共有{{ book_amount }}本书, 出借{{ book_out }}本; 有{{ users.count() }}位用户</div>
-<br />
-<form class="form-inline" action="/Search" method="post">
-  <div class="form-group">
-    <input type="text" class="form-control" name="keyword" placeholder="请输入关键字">
-  </div>
-  <button type="submit" class="btn btn-default">搜索</button>
-</form>
+<div class="col-md-12">
+    <h3>书籍</h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        过滤 <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+            <li><a href="/filter/on_bookshelf">在架书籍</a></li>
+            <li><a href="/">全部书籍</a></li>
+      </ul>
+    </div>
 
-<h3>书籍</h3>
-<div class="btn-group">
-  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    过滤 <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu">
-        <li><a href="/filter/on_bookshelf">在架书籍</a></li>
-        <li><a href="/">全部书籍</a></li>
-  </ul>
-</div>
+    <div class="table-responsive">
+    <table class="table table-hover">
 
-<div class="table-responsive">
-<table class="table table-hover">
+        <thead>
+        <tr>
+            <th>书名</th>
+            <th>作者</th>
+            <th>标签</th>
+            <th>状态</th>
+            <th>操作</th>
+            <th>贡献者</th>
+        </tr>
+        </thead>
 
-    <thead>
-    <tr>
-        <th>书名</th>
-        <th>作者</th>
-        <th>标签</th>
-        <th>状态</th>
-        <th>操作</th>
-        <th>贡献者</th>
-    </tr>
-    </thead>
+        <tbody>
+            {% for book in books %}
+                <tr>
+                <td><a href="/Detail/{{ book.id }}" title="详情">{{ book.title }}</a></td>
+                <td> {{ book.author }} </td>
+                <td>{% for tag in book.tags %}
+                    {{ tag }}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if book.num %}
+                        {% if book.online_url %}
+                            PDF版本
+                        {% else %}
+                            在架({{ book.num }}本)
+                        {% endif %}
+                    {% else %}
+                        没了
+                        {% for each_borrowed_user in book.user_borrowed %}
+                            <p><a href="/Profile/{{ each_borrowed_user.id }}" title="去看{{ each_borrowed_user.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ each_borrowed_user.nickname }} </a>在读</p>
+                        {% endfor %}
+                    {% endif %}
+                </td>
+                <td>
 
-    <tbody>
-        {% for book in books %}
-            <tr>
-            <td><a href="/Detail/{{ book.id }}" title="详情">{{ book.title }}</a></td>
-            <td> {{ book.author }} </td>
-            <td>{% for tag in book.tags %}
-                {{ tag }}
-                {% endfor %}
-            </td>
-            <td>
                 {% if book.num %}
                     {% if book.online_url %}
-                        PDF版本
-                    {% else %}
-                        在架({{ book.num }}本)
-                    {% endif %}
-                {% else %}
-                    没了
-                    {% for each_borrowed_user in book.user_borrowed %}
-                        <p><a href="/Profile/{{ each_borrowed_user.id }}" title="去看{{ each_borrowed_user.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ each_borrowed_user.nickname }} </a>在读</p>
-                    {% endfor %}
-                {% endif %}
-            </td>
-            <td>
+                        {% if 'http' not in book.online_url %}
+                            <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span><a href="http://{{ book.online_url }}" target="_blank">查看</a>
+                        {% else %}
+                            <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span><a href="{{ book.online_url }}" target="_blank">查看</a>
 
-            {% if book.num %}
-                {% if book.online_url %}
-                    {% if 'http' not in book.online_url %}
-                        <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span><a href="http://{{ book.online_url }}" target="_blank">查看</a>
+                        {% endif %}
                     {% else %}
-                        <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span><a href="{{ book.online_url }}" target="_blank">查看</a>
-
+                        <span class="glyphicon glyphicon-book" aria-hidden="true"></span><a href="/borrow_book/{{ book.id }}">借阅</a>
                     {% endif %}
+                {% elif book in user.wanted_book %}
+                    <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span><a href="/pull_want_book/{{ book.id }}" >不想读了</a>
                 {% else %}
-                    <span class="glyphicon glyphicon-book" aria-hidden="true"></span><a href="/borrow_book/{{ book.id }}">借阅</a>
+                    {% if book in user.borrowed_book %}
+                        <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span><a href="/return_book/{{ book.id }}">还书</a>
+                    {% else %}
+                        <span class="glyphicon glyphicon-star" aria-hidden="true"></span><a href="/want_book/{{ book.id }}">想读</a>
+                    {% endif %}
                 {% endif %}
-            {% elif book in user.wanted_book %}
-                <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span><a href="/pull_want_book/{{ book.id }}" >不想读了</a>
-            {% else %}
-                {% if book in user.borrowed_book %}
-                    <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span><a href="/return_book/{{ book.id }}">还书</a>
-                {% else %}
-                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span><a href="/want_book/{{ book.id }}">想读</a>
-                {% endif %}
-            {% endif %}
-            </td>
-            <td>
-            {% for each_owner in book.owner %}
-            <a href="/Profile/{{ each_owner.id }}">{{ each_owner.nickname }}</a>
+                </td>
+                <td>
+                {% for each_owner in book.owner %}
+                <a href="/Profile/{{ each_owner.id }}">{{ each_owner.nickname }}</a>
+                {% endfor %}
+                </td>
+                </tr>
             {% endfor %}
-            </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+
+    <div class="col-md-10">
+        <div>
+        {% if page > 2 %}
+            {% for n in range(1, page) %}
+                {% if n != current_page %}
+                    <a href="/page/{{ n }}">{{ n }}</a>
+                {% else %}
+                    <span>{{ n }}</span>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        </div>
+    </div>
+
 </div>
-
-<div>
-
-{% for n in range(1, page) %}
-    {% if n != current_page %}
-        <a href="/page/{{ n }}">{{ n }}</a>
-    {% else %}
-        <span>{{ n }}</span>
-    {% endif %}
-{% endfor %}
-</div>
-
-
 {% endblock %}

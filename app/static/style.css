@@ -35,6 +35,10 @@ text-decoration:none;
   padding-right: 4px;
 }
 
+.up{
+  padding-top: 4px;
+}
+
 body {
   /*background: url(/static/images/bg.jpg) no-repeat center center fixed;*/
   background-color: #f7f7f7;

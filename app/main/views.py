@@ -9,7 +9,7 @@ from flask.ext.login import current_user, login_required
 from app.utils import amount_fake_aggregation
 from app.utils.search_mongo import search
 
-page_limit = 10
+page_limit = 60
 
 
 @main.route('/')

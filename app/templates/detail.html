@@ -2,7 +2,10 @@
 {% block content %}
 <h3><a href="{{ book.raw_url }}" target="_blank" title="打开原添加网址">{{ book.title }}</a></h3>
 <div><a href="{{ book.raw_url }}" target="_blank" title="打开原添加网址"><img src="{{ book.img_url }}" /></a></div>
-
+<br />
+{% for owner in book.owner %}
+    <b><div>小伙伴: <a href="/Profile/{{ owner.id }}">{{ owner.nickname }}</a> 提供了这本书</div></b>
+{% endfor %}
 <h3>借阅记录</h3>
 {% if not delivers %}
     <div class="alert alert-warning" role="alert">还没有人借过这本书</div>
@@ -11,7 +14,6 @@
         <p>{{ deliver.user.nickname  }} 在 {{ deliver.borrow_time.strftime('%Y-%m-%d') }} 借过这本书</p>
     {% endfor %}
 {% endif %}
-
 
 <h3>评论</h3>
 {% if not book.comment %}
@@ -22,7 +24,7 @@
     <div>
         {{ comment.time.strftime('%Y-%m-%d %H:%M:%S') }}
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-        <strong> {{ comment.name.nickname }} </strong>:
+        <strong> <a href="/Profile/{{ comment.name.id }}">{{ comment.name.nickname }}</a></strong>:
         {{ comment.content }}
     </div>
     {% endfor %}
