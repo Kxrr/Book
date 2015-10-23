@@ -13,15 +13,21 @@ page_limit = 60
 
 
 @main.route('/')
-def index():
+def index(category=''):
+    category_dict = {
+        'category': category
+    }
     book_count = BookInfo.objects.count()
-    books = BookInfo.objects.limit(page_limit)
-    # user = User.objects.get(id=current_user.id)
+    if category:
+        books = BookInfo.objects.filter(**category_dict)
+    else:
+        books = BookInfo.objects.limit(page_limit)
     users = User.objects
     book_amount = amount_fake_aggregation.count_all()
     book_out = Delivery.objects(returned__ne=True).count()
-    return render_template('index.html', books=books, user=current_user, all_books=books, users=users,
-                           page=(book_count/page_limit)+2, current_page=1, book_amount=book_amount, book_out=book_out)
+    return render_template('index.html', books=books, user=current_user, all_books=books,
+                           users=users, page=(book_count/page_limit)+2, current_page=1,
+                           book_amount=book_amount, book_out=book_out)
 
 
 @main.route('/page/<string:n>')
@@ -92,6 +98,12 @@ def filter_shelf():
     books = all_books.filter(num__gt=0)
     users = User.objects
     return render_template('index.html', books=books, user=current_user, all_books=all_books, users=users, page=1)
+
+@main.route('/category/<string:category>')
+def filter_category(category):
+    return index(category=category)
+
+
 
 # @main.route('/redirect/<url>')
 # def redirect_url(url):

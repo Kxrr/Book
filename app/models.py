@@ -6,6 +6,13 @@ from datetime import datetime, timedelta
 
 connect('BookRoom')
 
+CATEGORY_CHOICES = (
+    (u'tech', u'技术'),
+    (u'literature', u'文学'),
+    (u'art', u'设计'),
+    (u'math', u'数理'),
+    (u'manager', u'管理'),
+)
 
 class User(DynamicDocument):
     username = StringField(max_length=20, unique=True, required=True, min_length=4)
@@ -60,7 +67,7 @@ class BookInfo(DynamicDocument):
     rate = FloatField()
     detail = ListField(StringField())
     tags = ListField(StringField())
-    category = StringField()
+    category = StringField(choices=CATEGORY_CHOICES)
     raw_url = StringField()
     online_url = StringField()
     img_url = StringField()
