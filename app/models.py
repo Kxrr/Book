@@ -21,6 +21,9 @@ ROLE_CHOICES = (
 )
 
 class User(DynamicDocument):
+    """
+    @summary: 用户
+    """
     username = StringField(max_length=20, unique=True, required=True, min_length=4)
     email = StringField(unique=True)
     password = StringField(required=True, min_length=6)

@@ -1,5 +1,5 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from app import app
-app.debug = True
+app.debug = False
 app.run(port=5321)
