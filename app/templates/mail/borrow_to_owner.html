@@ -1,0 +1,16 @@
+{% extends "mail/footer.html" %}
+{% block content %}
+
+
+<div>你好, {{ user_to.nickname }}</div>
+<br />
+
+<div>
+
+    <a href="http://book.kxrr.us/Profile/{{ user.id }}"> {{ user.nickname }}({{ user.real_name }}) </a>
+    希望借阅你的<a href="http://book.kxrr.us/Detail/{{ book.id }}"> 「{{ book.title }}」 </a>。
+
+</div>
+<br />
+
+{% endblock %}

@@ -7,7 +7,8 @@ from . import main
 from flask.ext.login import current_user, login_required
 
 from app.utils import amount_fake_aggregation
-from app.utils import email
+from app.utils.email import send_fav_noti_to_owner,\
+    send_fav_noti_to_borrowed, send_borrow_noti_to_owner
 from app.utils.search_mongo import search
 
 
@@ -50,20 +51,17 @@ def index_page(n):
 @login_required
 def borrow_book(book_id):
     if current_user.is_active:
-        book_obj = BookInfo.objects(id=book_id).first()
-        user_online_obj = User.objects(id=current_user.id).first()
-        if (book_obj not in user_online_obj.borrowed_book) and (book_obj.num > 0):
-            book_obj.update(dec__num=1, push__user_borrowed=user_online_obj)
-            user_online_obj.update(push__borrowed_book=book_obj)
-
-            Operation(type='borrow', user=user_online_obj, book_info=book_obj).save()
-            Delivery(user=user_online_obj, book=book_obj).save()
+        book = BookInfo.objects(id=book_id).first()
+        user = User.objects(id=current_user.id).first()
+        if (book not in user.borrowed_book) and (book.num > 0):
+            book.update(dec__num=1, push__user_borrowed=user)
+            user.update(push__borrowed_book=book)
+            Operation(type='borrow', user=user, book_info=book).save()
+            Delivery(user=user, book=book).save()
             # 发送邮件给拥有者
-            email.send_email(rec=book_obj.owner[0].email,
-                             content=u'<a href="http://book.kxrr.us/Profile/{}">{}</a>'
-                                     u'希望借阅你的「<a href="http://book.kxrr.us/Detail/{}">{}</a>」。'
-                             .format(user_online_obj.id, user_online_obj.nickname, book_obj.id, book_obj.title))
-            flash(u'「{}」, 操作成功, 己经发送借阅通知邮件给拥有者{}'.format(book_obj.title, book_obj.owner[0].real_name))
+            send_borrow_noti_to_owner(user, book.owner[0], book)
+            flash(u'「{}」, 操作成功, 己经发送借阅通知邮件给拥有者 {}({})'
+                  .format(book.title, book.owner[0].nickname, book.owner[0].real_name))
         else:
             flash(u'失败, 同一本书每人只能借一本')
     else:
@@ -78,17 +76,12 @@ def want_book(book_id):
     user = User.objects.get(id=current_user.id)
     user.update(push__wanted_book=book)
     # 发送邮件给正在读的人
-    email.send_email(rec=book.user_borrowed[0].email,
-                     content=u'<a href="http://book.kxrr.us/Profile/{}">{}</a>'
-                             u'将你正在读的「<a href="http://book.kxrr.us/Detail/{}">{}</a>」标记为想读。'
-                     .format(user.id, user.nickname, book.id, book.title))
+    send_fav_noti_to_borrowed(user, book.user_borrowed[0], book)
     # 发送邮件给拥者
-    email.send_email(rec=book.owner[0].email,
-                     content=u'<a href="http://book.kxrr.us/Profile/{}">{}</a>'
-                             u'将你的「<a href="http://book.kxrr.us/Detail/{}">{}</a>」标记为想读。'
-                     .format(user.id, user.nickname, book.id, book.title))
+    send_fav_noti_to_owner(user, book.owner[0], book)
 
-    flash(u'「{}」, 收藏成功, 己经发送通知邮件给正在读这本书的{}'.format(book.title, book.user_borrowed[0].real_name))
+    flash(u'「{}」, 收藏成功, 己经发送通知邮件给正在读这本书的 {}({})'
+          .format(book.title, book.user_borrowed[0].nickname, book.user_borrowed[0].real_name))
     return redirect('/')
 
 
@@ -123,10 +116,6 @@ def filter_shelf():
 def filter_category(category):
     return index(category=category)
 
-@main.route('/send')
-def send_mail():
-    send = email.send_email(rec='imres@qq.com', content=r'<b>~~nice~</b>')
-    return ''
 
 @main.errorhandler(401)
 def un_authorized(e):
