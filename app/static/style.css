@@ -39,6 +39,10 @@ text-decoration:none;
   padding-top: 4px;
 }
 
+.usercomments{
+  margin-bottom: 1em;
+}
+
 body {
   /*background: url(/static/images/bg.jpg) no-repeat center center fixed;*/
   background-color: #f7f7f7;

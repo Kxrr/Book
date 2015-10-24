@@ -27,6 +27,8 @@ def add_from_url():
         if parse:
             flash(u'感谢小伙伴: {}, 为聘宝添砖加瓦了, 「{}」, 添加成功 '
                   .format(current_user, spider.content_dict.get('title')))
+        else:
+            flash(u'添加失败, 请联系管理员')
         Operation(type='add', url_info=raw_url,
                   user=User.objects.get(id=current_user.id),
                   success=True if parse else False).save()

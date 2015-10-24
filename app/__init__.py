@@ -2,12 +2,17 @@
 
 from flask import Flask
 from flask.ext.login import LoginManager
+from flask_mail import Mail
 
 app = Flask(__name__)
 app.config.from_object('config')
 
 lm = LoginManager()
 lm.init_app(app)
+
+mailbox = Mail()
+mailbox.init_app(app)
+
 
 from .main import main as main_blueprint
 from .login import login as login_blueprint

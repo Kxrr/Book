@@ -12,6 +12,12 @@ CATEGORY_CHOICES = (
     (u'art', u'设计'),
     (u'math', u'数理'),
     (u'manager', u'管理'),
+    (u'economy', u'经济'),
+)
+
+ROLE_CHOICES = (
+    (u'staff', u'用户'),
+    (u'admin', u'管理员'),
 )
 
 class User(DynamicDocument):
@@ -21,7 +27,7 @@ class User(DynamicDocument):
     nickname = StringField(min_length=1)
     real_name = StringField()
     borrowed_book = ListField(ReferenceField('BookInfo'))
-    role = StringField(default='staff')
+    role = StringField(choices=ROLE_CHOICES, default='staff')
     owned_book = ListField(ReferenceField('BookInfo'))
     wanted_book = ListField(ReferenceField('BookInfo'))  # 没有书时的收藏功能
 

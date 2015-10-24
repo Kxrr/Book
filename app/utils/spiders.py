@@ -31,10 +31,13 @@ class BasicSpider(object):
             return False
 
     def save(self):
-        self.new_book = BookInfo(**self.content_dict).save()
-        self.new_book.update(push__owner=User.objects.get(id=self.owner_id))
-        User.objects(id=self.owner_id).first().update(push__owned_book=self.new_book)
-        return self.new_book
+        if self.content_dict.get('title'):
+            self.new_book = BookInfo(**self.content_dict).save()
+            self.new_book.update(push__owner=User.objects.get(id=self.owner_id))
+            User.objects(id=self.owner_id).first().update(push__owned_book=self.new_book)
+            return self.new_book
+        else:
+            return False
 
 
 class DoubanSpider(BasicSpider):
@@ -52,7 +55,6 @@ class DoubanSpider(BasicSpider):
             'rate': float(rate[0].strip()) if (rate and '.' in rate[0]) else 0,
             'detail': detail if detail else [],
             'tags': tags if len(tags) < 5 else tags[0:5],
-            'category': '',
             'raw_url': self.url,
             'online_url': self.online_url,
             'img_url': img_url[0] if img_url else '',
@@ -64,8 +66,7 @@ class DoubanSpider(BasicSpider):
             User.objects(id=self.owner_id).first().update(push__owned_book=self.existed_book.first())
             return True
         else:
-            self.save()
-            return True
+            return self.save()
 
 class DoubanReadSpider(BasicSpider):
     # def parse_content(self):

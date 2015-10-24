@@ -16,6 +16,7 @@ def count_owned():
         count.append(len(user.owned_book))
         u_id.append(user.id)
     result = zip(name, count, u_id)
+    # [name, count, id]
     result_sorted = sorted(result, key=lambda x: x[1], reverse=True)
     return result_sorted
 

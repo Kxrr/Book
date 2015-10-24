@@ -59,6 +59,7 @@
         <a href="/category/art"><span class="label label-danger">设计</span></a>
         <a href="/category/manager"><span class="label label-success">管理</span></a>
         <a href="/category/math"><span class="label label-warning">数理</span></a>
+        <a href="/category/economy"><span class="label label-primary">经济</span></a>
     </div>
 
     <div class="table-responsive">
@@ -80,7 +81,7 @@
                 <td><a href="/Detail/{{ book.id }}" title="详情">{{ book.title }}</a></td>
                 <td> {{ book.author }} </td>
                 <td>{% for tag in book.tags %}
-                    {{ tag }}
+                    <a href="/Search?keywords={{ tag }}">{{ tag }}</a>
                     {% endfor %}
                 </td>
                 <td>

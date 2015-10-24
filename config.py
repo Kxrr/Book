@@ -8,3 +8,6 @@ SECRET_KEY = 'kxrr'
 WTF_CSRF_ENABLED = False
 SESSION_TYPE = 'mongodb'
 
+MAIL_SERVER = 'smtp.sina.com'
+MAIL_USERNAME = 'random009s'
+MAIL_PASSWORD = 'randomemail'

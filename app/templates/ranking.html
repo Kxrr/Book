@@ -7,14 +7,18 @@
 <h3>贡献</h3>
 {% if owns %}
 {% for own in owns %}
-    <p><a href="/Profile/{{ own[2] }}"> {{ own[0] }}</a> {{ own[1] }}</p>
+    {% if own[1] > 0 %}
+        <p><a href="/Profile/{{ own[2] }}"> {{ own[0] }}</a> {{ own[1] }}</p>
+    {% endif %}
 {% endfor %}
 {% endif %}
     
 <h3>爱读书</h3>
 {% if reads %}
 {% for read in reads %}
-    <p><a href="/Profile/{{ read[2] }}"> {{ read[0] }}</a> {{ read[1] }}</p>
+    {% if read[1] > 0 %}
+        <p><a href="/Profile/{{ read[2] }}"> {{ read[0] }}</a> {{ read[1] }}</p>
+    {% endif %}
 {% endfor %}
 {% endif %}
 

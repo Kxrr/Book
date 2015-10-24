@@ -21,7 +21,7 @@
 {% else %}
     {% for comment in book.comment %}
 
-    <div>
+    <div class="usercomments">
         {{ comment.time.strftime('%Y-%m-%d %H:%M:%S') }}
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
         <strong> <a href="/Profile/{{ comment.name.id }}">{{ comment.name.nickname }}</a></strong>:

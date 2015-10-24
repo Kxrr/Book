@@ -7,9 +7,11 @@ from . import main
 from flask.ext.login import current_user, login_required
 
 from app.utils import amount_fake_aggregation
+from app.utils import email
 from app.utils.search_mongo import search
 
-page_limit = 60
+
+page_limit = 100
 
 
 @main.route('/')
@@ -49,19 +51,23 @@ def index_page(n):
 def borrow_book(book_id):
     if current_user.is_active:
         book_obj = BookInfo.objects(id=book_id).first()
-        user_online_obj = User.objects(id=current_user.id).first()  # Watch out, current_user is <class 'werkzeug.local.LocalProxy'>
+        user_online_obj = User.objects(id=current_user.id).first()
         if (book_obj not in user_online_obj.borrowed_book) and (book_obj.num > 0):
             book_obj.update(dec__num=1, push__user_borrowed=user_online_obj)
             user_online_obj.update(push__borrowed_book=book_obj)
 
             Operation(type='borrow', user=user_online_obj, book_info=book_obj).save()
             Delivery(user=user_online_obj, book=book_obj).save()
-            # 异常处理
-            flash(u'「{}」, 借阅成功'.format(book_obj.title))
+            # 发送邮件给拥有者
+            email.send_email(rec=book_obj.owner[0].email,
+                             content=u'<a href="http://book.kxrr.us/Profile/{}">{}</a>'
+                                     u'希望借阅你的「<a href="http://book.kxrr.us/Detail/{}">{}</a>」。'
+                             .format(user_online_obj.id, user_online_obj.nickname, book_obj.id, book_obj.title))
+            flash(u'「{}」, 操作成功, 己经发送借阅通知邮件给拥有者{}'.format(book_obj.title, book_obj.owner[0].real_name))
         else:
             flash(u'失败, 同一本书每人只能借一本')
     else:
-        flash(u'失败, 请登录后再操作')
+        flash(u'请登录后再操作')
     return redirect('/')
 
 
@@ -71,7 +77,18 @@ def want_book(book_id):
     book = BookInfo.objects.get(id=book_id)
     user = User.objects.get(id=current_user.id)
     user.update(push__wanted_book=book)
-    flash(u'「{}」, 收藏成功, 有书时会发送邮件通知(其实目前还没有)'.format(book.title))
+    # 发送邮件给正在读的人
+    email.send_email(rec=book.user_borrowed[0].email,
+                     content=u'<a href="http://book.kxrr.us/Profile/{}">{}</a>'
+                             u'将你正在读的「<a href="http://book.kxrr.us/Detail/{}">{}</a>」标记为想读。'
+                     .format(user.id, user.nickname, book.id, book.title))
+    # 发送邮件给拥者
+    email.send_email(rec=book.owner[0].email,
+                     content=u'<a href="http://book.kxrr.us/Profile/{}">{}</a>'
+                             u'将你的「<a href="http://book.kxrr.us/Detail/{}">{}</a>」标记为想读。'
+                     .format(user.id, user.nickname, book.id, book.title))
+
+    flash(u'「{}」, 收藏成功, 己经发送通知邮件给正在读这本书的{}'.format(book.title, book.user_borrowed[0].real_name))
     return redirect('/')
 
 
@@ -85,9 +102,12 @@ def pull_want_book(book_id):
     return redirect('/')
 
 
-@main.route('/Search', methods=['POST'])
+@main.route('/Search', methods=['POST', 'GET'])
 def handle_search():
-    keyword = request.form['keyword'].strip()
+    if request.method == 'POST':
+        keyword = request.form['keyword'].strip()
+    else:
+        keyword = request.args.get('keywords').strip()
     results = search(keyword)
     return render_template('search_result.html', results=results, keyword=keyword, user=current_user)
 
@@ -103,22 +123,10 @@ def filter_shelf():
 def filter_category(category):
     return index(category=category)
 
-
-
-# @main.route('/redirect/<url>')
-# def redirect_url(url):
-#     print url
-#     if 'http' in url:
-#         return redirect(url)
-#     else:
-#         return redirect('http://' + url)
-
-
-@main.route('/test_1')
-@login_required
-def test_1():
-    return '--'
-
+@main.route('/send')
+def send_mail():
+    send = email.send_email(rec='imres@qq.com', content=r'<b>~~nice~</b>')
+    return ''
 
 @main.errorhandler(401)
 def un_authorized(e):
