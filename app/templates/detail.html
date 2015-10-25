@@ -4,7 +4,7 @@
 <div><a href="{{ book.raw_url }}" target="_blank" title="打开原添加网址"><img src="{{ book.img_url }}" /></a></div>
 <br />
 {% for owner in book.owner %}
-    <b><div>小伙伴: <a href="/Profile/{{ owner.id }}">{{ owner.nickname }}</a> 提供了这本书</div></b>
+    <b><div>小伙伴: <a href="{{ url_for('profile.user_info', id=owner.str_id) }}">{{ owner.nickname }}</a> 提供了这本书</div></b>
 {% endfor %}
 <h3>借阅记录</h3>
 {% if not delivers %}
@@ -24,7 +24,8 @@
     <div class="usercomments">
         {{ comment.time.strftime('%Y-%m-%d %H:%M:%S') }}
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-        <strong> <a href="/Profile/{{ comment.name.id }}">{{ comment.name.nickname }}</a></strong>:
+        <strong> <a href="{{ url_for('profile.user_info', id=comment.name.str_id) }}">{{ comment.name.nickname }}</a></strong>:
+
         {{ comment.content }}
     </div>
     {% endfor %}

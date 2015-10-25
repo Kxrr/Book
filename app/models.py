@@ -46,6 +46,10 @@ class User(DynamicDocument):
     def get_id(self):
         return str(self.id)  # Watch out here, needs str
 
+    @property
+    def str_id(self):
+        return str(self.id)
+
     def save(self, *args, **kwargs):
         if not self.real_name:
             self.real_name = self.nickname
@@ -90,6 +94,10 @@ class BookInfo(DynamicDocument):
 
     comment = ListField(EmbeddedDocumentField(Comment))
 
+    @property
+    def str_id(self):
+        return str(self.id)
+
     meta = {'ordering': ['-update_time', '-id']}
 
     def __unicode__(self):
@@ -126,6 +134,10 @@ class Delivery(DynamicDocument):
 
     return_time = DateTimeField()
     returned = BooleanField(default=False)
+
+    @property
+    def str_id(self):
+        return str(self.id)
 
 if __name__ == '__main__':
     import ipdb; ipdb.set_trace()

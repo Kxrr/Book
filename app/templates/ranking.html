@@ -8,7 +8,8 @@
 {% if owns %}
 {% for own in owns %}
     {% if own[1] > 0 %}
-        <p><a href="/Profile/{{ own[2] }}"> {{ own[0] }}</a> {{ own[1] }}</p>
+
+        <p><a href="{{ url_for('profile.user_info', id=own[2]) }}"> {{ own[0] }}</a> {{ own[1] }}</p>
     {% endif %}
 {% endfor %}
 {% endif %}
@@ -17,7 +18,8 @@
 {% if reads %}
 {% for read in reads %}
     {% if read[1] > 0 %}
-        <p><a href="/Profile/{{ read[2] }}"> {{ read[0] }}</a> {{ read[1] }}</p>
+
+        <p><a href="{{ url_for('detail.book_detail', book_id=read[2]) }}"> {{ read[0] }}</a> {{ read[1] }}</p>
     {% endif %}
 {% endfor %}
 {% endif %}
@@ -27,7 +29,7 @@
 <h3>受欢迎</h3>
 {% for pop in pops %}
     {% if pop[1] != 0 %}
-        <p><a href="/Detail/{{ pop[2] }}" title="详情"> {{ pop[0] }}</a> {{ pop[1] }}</p>
+        <p><a href="{{ url_for('detail.book_detail', book_id=pop[2]) }}" title="详情"> {{ pop[0] }}</a> {{ pop[1] }}</p>
     {% endif %}
 {% endfor %}
 {% endif %}

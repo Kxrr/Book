@@ -12,18 +12,18 @@
 
 <div class="col-md-4">
     {% if user.is_active %}
-        <div>你好, {{ user.nickname }} | <a href="/MyInfo">我的书籍</a>
+        <div>你好, {{ user.nickname }} | <a href="{{ url_for('profile.profile_info') }}">我的书籍</a>
         {#{% if user.role == 'admin' %}#}
         {#    | <a href="/Manager">管理入口</a>#}
         {#{% endif %}#}
-        | <a href="/Manager" class="split">添加图书</a>
-        | <a href="/Ranking" class="split">排行榜</a>
-        | <a href="/handle_logout" class="split">登出</a>
+        | <a href="{{ url_for('manager.manager_index') }}" class="split">添加图书</a>
+        | <a href="{{ url_for('ranking.ranking') }}" class="split">排行榜</a>
+        | <a href="{{ url_for('login.handle_logout') }}" class="split">登出</a>
         </div>
     {% else %}
         <div>
-        <a href="/Login" class="split">登录</a>
-        <a href="/Register" class="split">注册</a>
+        <a href="{{ url_for('login.login_index') }}" class="split">登录</a>
+        <a href="{{ url_for('login.register') }}" class="split">注册</a>
         </div>
     {% endif %}
 </div>
@@ -47,19 +47,20 @@
         过滤 <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-            <li><a href="/filter/on_bookshelf">在架书籍</a></li>
-            <li><a href="/">全部书籍</a></li>
+            <li><a href="{{ url_for('main.filter_shelf') }}">在架书籍</a></li>
+            <li><a href="{{ url_for('main.index') }}">全部书籍</a></li>
       </ul>
     </div>
 
     <div>
         <br />
-        <a href="/category/literature"><span class="label label-info">文学</span></a>
-        <a href="/category/tech"><span class="label label-default">技术</span></a>
-        <a href="/category/art"><span class="label label-danger">设计</span></a>
-        <a href="/category/manager"><span class="label label-success">管理</span></a>
-        <a href="/category/math"><span class="label label-warning">数理</span></a>
-        <a href="/category/economy"><span class="label label-primary">经济</span></a>
+
+        <a href="{{ url_for('main.filter_category', category='literature') }}"><span class="label label-info">文学</span></a>
+        <a href="{{ url_for('main.filter_category', category='tech') }}"><span class="label label-default">技术</span></a>
+        <a href="{{ url_for('main.filter_category', category='art') }}"><span class="label label-danger">设计</span></a>
+        <a href="{{ url_for('main.filter_category', category='manager') }}"><span class="label label-success">管理</span></a>
+        <a href="{{ url_for('main.filter_category', category='math') }}"><span class="label label-warning">数理</span></a>
+        <a href="{{ url_for('main.filter_category', category='economy') }}"><span class="label label-primary">经济</span></a>
     </div>
 
     <div class="table-responsive">
@@ -78,10 +79,10 @@
         <tbody>
             {% for book in books %}
                 <tr>
-                <td><a href="/Detail/{{ book.id }}" title="详情">{{ book.title }}</a></td>
+                <td><a href="{{ url_for('detail.book_detail', book_id=book.str_id) }}" title="详情">{{ book.title }}</a></td>
                 <td> {{ book.author }} </td>
                 <td>{% for tag in book.tags %}
-                    <a href="/Search?keywords={{ tag }}">{{ tag }}</a>
+                    <a href="{{ url_for('main.handle_search', keywords=tag) }}">{{ tag }}</a>
                     {% endfor %}
                 </td>
                 <td>
@@ -94,7 +95,7 @@
                     {% else %}
                         没了
                         {% for each_borrowed_user in book.user_borrowed %}
-                            <p><a href="/Profile/{{ each_borrowed_user.id }}" title="去看{{ each_borrowed_user.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ each_borrowed_user.nickname }} </a>在读</p>
+                            <p><a href="{{ url_for('profile.user_info', id=each_borrowed_user.str_id) }}" title="去看{{ each_borrowed_user.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ each_borrowed_user.nickname }} </a>在读</p>
                         {% endfor %}
                     {% endif %}
                 </td>
@@ -109,21 +110,21 @@
 
                         {% endif %}
                     {% else %}
-                        <span class="glyphicon glyphicon-book" aria-hidden="true"></span><a href="/borrow_book/{{ book.id }}">借阅</a>
+                        <span class="glyphicon glyphicon-book" aria-hidden="true"></span><a href="{{ url_for('main.borrow_book', book_id=book.str_id) }}">借阅</a>
                     {% endif %}
                 {% elif book in user.wanted_book %}
-                    <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span><a href="/pull_want_book/{{ book.id }}" >不想读了</a>
+                    <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span><a href="{{ url_for('main.pull_want_book', book_id=book.str_id) }}" >不想读了</a>
                 {% else %}
                     {% if book in user.borrowed_book %}
-                        <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span><a href="/return_book/{{ book.id }}">还书</a>
+                        <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span><a href="{{ url_for('profile.return_book', book_id=book.str_id) }}">还书</a>
                     {% else %}
-                        <span class="glyphicon glyphicon-star" aria-hidden="true"></span><a href="/want_book/{{ book.id }}">想读</a>
+                        <span class="glyphicon glyphicon-star" aria-hidden="true"></span><a href="{{ url_for('main.want_book', book_id=book.str_id) }}">想读</a>
                     {% endif %}
                 {% endif %}
                 </td>
                 <td>
                 {% for each_owner in book.owner %}
-                <a href="/Profile/{{ each_owner.id }}">{{ each_owner.nickname }}</a>
+                <a href="{{ url_for('profile.user_info', id=each_owner.str_id) }}">{{ each_owner.nickname }}</a>
                 {% endfor %}
                 </td>
                 </tr>

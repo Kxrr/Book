@@ -5,8 +5,8 @@
 <div>你好, {{ user_to.nickname }}</div><br />
 <div>
 
-    <a href="http://book.kxrr.us/Profile/{{ user.id }}"> {{ user.nickname }}({{ user.real_name }}) </a>
-    刚刚收藏了你的<a href="http://book.kxrr.us/Detail/{{ book.id }}"> 「{{ book.title }}」 </a>。
+    <a href="{{ url_for('profile.user_info', _external=True, id=user.str_id) }}"> {{ user.nickname }}({{ user.real_name }}) </a>
+    刚刚收藏了你的<a href="{{ url_for('detail.book_detail', _external=True, book_id=book.str_id) }}"> 「{{ book.title }}」 </a>。
 
 </div>
 <br />

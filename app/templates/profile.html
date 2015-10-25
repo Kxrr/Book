@@ -21,12 +21,12 @@
         {% for book in books %}
             <tr>
 
-            <td><a href="/Detail/{{ book.id }}">{{ book.title }}</a></td>
+            <td><a href="{{ url_for('detail.book_detail', book_id=book.str_id) }}">{{ book.title }}</a></td>
             <td>{{ deliverys.filter(book=book).first().borrow_time.strftime('%Y-%m-%d') }}</td>
             <td> {{ deliverys.filter(book=book).first().deadline.strftime('%Y-%m-%d') }}</td>
             <td>{{ (deliverys.filter(book=book).first().deadline - now).days }}天</td>
             <td>
-                <a href="/return_book/{{ book.id }}">还书</a>
+                <a href="{{ url_for('profile.return_book', book_id=book.str_id) }}">还书</a>
             </td>
 
             </tr>
@@ -49,7 +49,7 @@
         {% for owned_book in owned_books %}
             <tr>
 
-            <td><a href="/Detail/{{ owned_book.id }}">{{ owned_book.title }}</a></td>
+            <td><a href="{{ url_for('detail.book_detail', book_id=owned_book.str_id) }}">{{ owned_book.title }}</a></td>
 
 
             </tr>
@@ -72,10 +72,7 @@
     <tbody>
         {% for wanted_book in user.wanted_book %}
             <tr>
-
-            <td><a href="/Detail/{{ wanted_book.id }}">{{ wanted_book.title }}</a></td>
-
-
+            <td><a href="{{ url_for('detail.book_detail', book_id=wanted_book.str_id) }}">{{ wanted_book.title }}</a></td>
             </tr>
         {% endfor %}
     </tbody>

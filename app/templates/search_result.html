@@ -30,7 +30,7 @@
     <tbody>
         {% for book in results %}
             <tr>
-            <td><a href="/Detail/{{ book.id }}" title="详情">{{ book.title }}</a></td>
+            <td><a href="{{ url_for('detail.book_detail', book_id=book.str_id) }}" title="详情">{{ book.title }}</a></td>
             <td> {{ book.author }} </td>
             <td>{% for tag in book.tags %}
                 {{ tag }}
@@ -46,7 +46,7 @@
                 {% else %}
                     没了
                     {% for each_borrowed_user in book.user_borrowed %}
-                        <p><a href="/Profile/{{ each_borrowed_user.id }}" title="去看{{ each_borrowed_user.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ each_borrowed_user.nickname }} </a>在读</p>
+                        <p><a href="{{ url_for('profile.user_info', id=each_borrowed_user.str_id) }}" title="去看{{ each_borrowed_user.nickname }}书架"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ each_borrowed_user.nickname }} </a>在读</p>
                     {% endfor %}
                 {% endif %}
             </td>
@@ -60,12 +60,12 @@
                         <a href="{{ book.online_url }}" target="_blank">在线查看</a>
                     {% endif %}
                 {% else %}
-                    <a href="/borrow_book/{{ book.id }}">借阅</a>
+                    <a href="{{ url_for('main.borrow_book', book_id=book.str_id) }}">借阅</a>
                 {% endif %}
             {% elif book in user.wanted_book %}
-                <a href="/pull_want_book/{{ book.id }}" title="不想读了">不想读了</a>
+                <a href="{{ url_for('main.pull_want_book', book_id=book.str_id) }}" title="不想读了">不想读了</a>
             {% else %}
-                <a href="/want_book/{{ book.id }}">想读</a>
+                <a href="{{ url_for('main.want_book', book_id=book.str_id) }}">想读</a>
             {% endif %}
             </td>
 

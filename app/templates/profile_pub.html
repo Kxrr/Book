@@ -16,7 +16,7 @@
     <tbody>
         {% for book in user.borrowed_book %}
             <tr>
-            <td><a href="/Detail/{{ book.id }}">{{ book.title }}</a></td>
+            <td><a href="{{ url_for('detail.book_detail', book_id=book.str_id) }}">{{ book.title }}</a></td>
             <td> {{ deliverys.filter(book=book).first().deadline.strftime('%Y-%m-%d') }} </td>
             </tr>
         {% endfor %}
@@ -38,10 +38,7 @@
     <tbody>
         {% for owned_book in owned_books %}
             <tr>
-
-            <td><a href="/Detail/{{ owned_book.id }}">{{ owned_book.title }}</a></td>
-
-
+            <td><a href="{{ url_for('detail.book_detail', book_id=owned_book.str_id) }}">{{ owned_book.title }}</a></td>
             </tr>
         {% endfor %}
     </tbody>
@@ -63,7 +60,7 @@
         {% for delivery in deliverys %}
             <tr>
 
-            <td><a href="/Detail/{{ delivery.id }}">{{ delivery.book.title }}</a></td>
+            <td><a href="{{ url_for('detail.book_detail', book_id=delivery.str_id) }}">{{ delivery.book.title }}</a></td>
 
 
             </tr>

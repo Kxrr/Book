@@ -47,7 +47,7 @@ def index_page(n):
                            book_amount=book_amount, book_out=book_out)
 
 
-@main.route('/borrow_book/<string:book_id>')
+@main.route('/borrow/<string:book_id>')
 @login_required
 def borrow_book(book_id):
     if current_user.is_active:
@@ -69,7 +69,7 @@ def borrow_book(book_id):
     return redirect('/')
 
 
-@main.route('/want_book/<string:book_id>')
+@main.route('/fav/<string:book_id>')
 @login_required
 def want_book(book_id):
     book = BookInfo.objects.get(id=book_id)
@@ -85,7 +85,7 @@ def want_book(book_id):
     return redirect('/')
 
 
-@main.route('/pull_want_book/<string:book_id>')
+@main.route('/unfav/<string:book_id>')
 @login_required
 def pull_want_book(book_id):
     book = BookInfo.objects.get(id=book_id)

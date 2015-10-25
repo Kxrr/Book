@@ -7,7 +7,7 @@ from flask.ext.login import current_user, login_required
 
 from datetime import datetime
 
-@profile.route('/MyInfo')
+@profile.route('/Shelf')
 def profile_info():
     user_obj = User.objects.get(id=current_user.id)
     user_borrowed_books = user_obj.borrowed_book
@@ -18,7 +18,7 @@ def profile_info():
                            user=user_obj, deliverys=deliverys, now=now)
 
 
-@profile.route('/return_book/<string:book_id>')
+@profile.route('/return/<string:book_id>')
 @login_required
 def return_book(book_id):
     user_obj = User.objects(id=current_user.id).first()
@@ -36,7 +36,7 @@ def return_book(book_id):
         return redirect('/')
 
 
-@profile.route('/Profile/<string:id>')
+@profile.route('/User/<string:id>')
 def user_info(id):
     user = User.objects(id=id).first()
     deliverys = Delivery.objects(user=user)

@@ -72,7 +72,7 @@ def handle_login():
         return redirect('/Login')
 
 
-@login.route('/handle_logout')
+@login.route('/Logout')
 def handle_logout():
     logout_user()
     flash(u'己登出')
