@@ -25,14 +25,14 @@ def send_email(rec, html_content, subject, subject_prefix='[聘宝藏经阁] '):
 
 def send_fav_noti_to_owner(user, user_to, book):
     html_content = render_template('mail/fav_to_owner.html', user=user, user_to=user_to, book=book)
-    send_email(rec=user_to.email, html_content=html_content, subject='有人收藏了你的书～')
+    send_email(rec=user_to.email, html_content=html_content, subject='有人收藏了你的书')
 
 
 def send_fav_noti_to_borrowed(user, user_to, book):
     html_content = render_template('mail/fav_to_borrowed.html', user=user, user_to=user_to, book=book)
-    send_email(rec=user_to.email, html_content=html_content, subject='有人收藏了你正在看的书～')
+    send_email(rec=user_to.email, html_content=html_content, subject='有人收藏了你正在看的书')
 
 
 def send_borrow_noti_to_owner(user, user_to, book):
     html_content = render_template('mail/borrow_to_owner.html', user=user, user_to=user_to, book=book)
-    send_email(rec=user_to.email, html_content=html_content, subject='有人希望借阅你的书～')
+    send_email(rec=user_to.email, html_content=html_content, subject='有人希望借阅你的书')

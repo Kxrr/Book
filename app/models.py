@@ -107,6 +107,10 @@ class BookInfo(DynamicDocument):
     def objects(doc_cls, queryset):
         return queryset.filter(deleted__ne=True)
 
+    @queryset_manager
+    def get_all(doc_cls, queryset):
+        return queryset.order_by('-deleted', '-id')
+
 
 class Operation(DynamicDocument):
     """

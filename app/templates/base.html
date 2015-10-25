@@ -18,32 +18,34 @@
 
 <div class="container-fluid">
 
-<!-- 头部 -->
+<!-- Header -->
     <div class="row">
         <div class="col-md-1"></div>
 
         <div class="col-md-10">
-            <div class="page-header">
-              <h1><img src="{{ url_for('static',filename='images/pinbot-logo.png') }}" class="img-rounded"><a class="br-head" href="{{ url_for('main.index') }}" > 藏经阁</a></h1>
+            <div class="col-md-12">
+                <div class="page-header">
+                  <h1><img src="{{ url_for('static',filename='images/pinbot-logo.png') }}" class="img-rounded"><a class="br-head" href="{{ url_for('main.index') }}" > 藏经阁</a></h1>
+                </div>
             </div>
         </div>
     </div>
 
-<!-- 表格 -->
+<!-- Table -->
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10">
-            <div>
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                    <p style="color: red">{{ message }}</p>
-                {% endfor %}
-              {% else %}
-                <p style="color: red; visibility: hidden;">-</p>
-              {% endif %}
-            {% endwith %}
-            </div>
+                <div class="col-md-12">
+                    {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                        {% for message in messages %}
+                            <div style="color: red">> {{ message }}</div>
+                        {% endfor %}
+                      {% else %}
+                        <div style="color: red; visibility: hidden;">提示消息</div>
+                      {% endif %}
+                    {% endwith %}
+                </div>
             {% block content %}
             {% endblock %}
         </div>
@@ -53,16 +55,20 @@
 
 </div>
 
+<!-- Footer -->
 <div class="row">
+    <div class="col-md-12">
     <div class="col-md-1"></div>
     <div class="col-md-10">
-      <footer class="footer">
-        <br /><br />
-        <p>&copy; Pinbot 2015</p>
-        <div style="display:none"> <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1252961930'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1252961930%26show%3Dpic2' type='text/javascript'%3E%3C/script%3E"));</script> </div>
-      </footer>
+        <div class="col-md-12">
+              <footer class="footer">
+                <br />
+                <p>&copy; Pinbot 2015</p>
+                <div style="display:none"> <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1252961930'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1252961930%26show%3Dpic2' type='text/javascript'%3E%3C/script%3E"));</script> </div>
+              </footer>
+        </div>
     </div>
-
+</div>
 </div>
 
 </body>

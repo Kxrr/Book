@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="col-md-12">
 {% if owned_books.count() > 0 %}
     <div><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Dear {{ user.nickname }}, 感谢你为小伙伴们提供了{{ owned_books.count() }}本小人书, 得到回馈{{ deliverys.count() }}本大人书</div>
 {% endif %}
@@ -78,5 +79,5 @@
     </tbody>
 </table>
 </div>
-
+</div>
 {% endblock %}

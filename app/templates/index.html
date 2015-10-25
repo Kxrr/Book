@@ -10,7 +10,7 @@
 
 <div class="col-md-4"></div>
 
-<div class="col-md-4">
+<div class="col-md-4" style="text-align: right">
     {% if user.is_active %}
         <div>你好, {{ user.nickname }} | <a href="{{ url_for('profile.profile_info') }}">我的书籍</a>
         {#{% if user.role == 'admin' %}#}
@@ -25,6 +25,10 @@
         <a href="{{ url_for('login.login_index') }}" class="split">登录</a>
         <a href="{{ url_for('login.register') }}" class="split">注册</a>
         </div>
+    {% endif %}
+
+    {% if user.role == 'admin' %}
+        <a href="/admin" class="split">Flask-admin</a>
     {% endif %}
 </div>
 

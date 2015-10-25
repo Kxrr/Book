@@ -1,13 +1,13 @@
 {% extends "mail/footer.html" %}
 {% block content %}
 
-<div>你好, {{ user_to.nickname }}</div>
+<div>你好, {{ user_to.nickname }} </div>
 <br />
 
 <div>
 
-    <a href="{{ url_for('profile.user_info', _external=True, id=user.str_id) }}"> {{ user.nickname }}({{ user.real_name }}) </a>
-    刚刚收藏了你正在看的<a href="{{ url_for('detail.book_detail', _external=True, book_id=book.str_id) }}"> 「{{ book.title }}」 </a>。
+    <p> <a href="{{ url_for('profile.user_info', _external=True, id=user.str_id) }}">{{ user.nickname }}({{ user.real_name }})</a>
+    刚刚收藏了你正在看的 <a href="{{ url_for('detail.book_detail', _external=True, book_id=book.str_id) }}">「{{ book.title }}」</a> 。</p>
 
 </div>
 <br />

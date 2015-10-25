@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-
-<h3>注册</h3>
-<hr align="left" width="30%">
-{% from "_formhelpers.html" import render_field %}
-<form method=post action="/handle_register">
-    {{ render_field(form.username, class="form-control", placeholder="请输入英文用户名") }}
-    {{ render_field(form.email, class="form-control") }}
-    {{ render_field(form.password, class="form-control", placeholder="密码至少需要6位") }}
-    {{ render_field(form.nickname, class="form-control", placeholder="请输入中文昵称") }}
-  <p><input type=submit value="立即注册" class="btn btn-default">
-</form>
-
+<div class="col-md-12">
+    <h3>注册</h3>
+    <hr align="left" width="30%">
+    {% from "_formhelpers.html" import render_field %}
+    <form method=post action="/handle_register">
+        {{ render_field(form.username, class="form-control", placeholder="请输入英文用户名") }}
+        {{ render_field(form.email, class="form-control") }}
+        {{ render_field(form.password, class="form-control", placeholder="密码至少需要6位") }}
+        {{ render_field(form.nickname, class="form-control", placeholder="请输入中文昵称") }}
+      <p><input type=submit value="立即注册" class="btn btn-default">
+    </form>
+</div>
 {% endblock %}
