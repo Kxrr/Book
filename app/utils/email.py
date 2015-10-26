@@ -1,10 +1,9 @@
-#-*- coding: utf-8 -*-
-
-from app import mailbox
-from app import app
+# -*- coding: utf-8 -*-
+from app import app, mailbox
 from flask_mail import Message
 from flask import render_template
 from threading import Thread
+from config import MAIL_SUB_PREFIX
 
 
 def send_async_email(msg):
@@ -13,7 +12,7 @@ def send_async_email(msg):
         return True
 
 
-def send_email(rec, html_content, subject, subject_prefix='[聘宝藏经阁] '):
+def send_email(rec, html_content, subject, subject_prefix=MAIL_SUB_PREFIX):
     if not isinstance(rec, list):
         rec = [rec]
     msg = Message(subject_prefix + subject, sender="random009s@sina.com", recipients=rec)

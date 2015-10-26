@@ -1,13 +1,24 @@
-#-*- coding: utf-8 -*-
-
+# -*- coding: utf-8 -*-
 import os
-basedir = os.path.abspath(os.path.dirname(__file__))
+import platform
 
-MONGODB_SETTINGS = {'DB':'BookRoom'}
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
 SECRET_KEY = 'kxrr'
-WTF_CSRF_ENABLED = False
 SESSION_TYPE = 'mongodb'
+WTF_CSRF_ENABLED = False  # 会引起登录问题
 
 MAIL_SERVER = 'smtp.sina.com'
 MAIL_USERNAME = 'random009s'
 MAIL_PASSWORD = 'randomemail'
+MAIL_SUB_PREFIX = '[聘宝藏经阁] '
+
+MONGODBDATEBASE = {
+    'db': 'BookRoom',
+    'host': 'localhost',
+    'port': 27017,
+}
+
+FLASK_DEBUG = False if platform.uname()[2] == '2.6.32-042stab104.1' else True
+FLASK_PORT = 5321
+
+PAGE_LIMIT = 100

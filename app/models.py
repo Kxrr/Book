@@ -1,10 +1,10 @@
-#-*- coding: utf-8 -*
-
+# -*- coding: utf-8 -*
 from mongoengine import DynamicDocument, EmbeddedDocument, connect, StringField, ListField, FloatField, \
     DateTimeField, BooleanField, ReferenceField, EmbeddedDocumentField, IntField, queryset_manager
+from config import MONGODBDATEBASE
 from datetime import datetime, timedelta
 
-connect('BookRoom')
+connect(**MONGODBDATEBASE)
 
 CATEGORY_CHOICES = (
     (u'tech', u'技术'),
@@ -142,7 +142,3 @@ class Delivery(DynamicDocument):
     @property
     def str_id(self):
         return str(self.id)
-
-if __name__ == '__main__':
-    import ipdb; ipdb.set_trace()
-    print ''

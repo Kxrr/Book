@@ -1,14 +1,12 @@
 #-*- coding: utf-8 -*-                                                                                     
 
 from flask import render_template, request, redirect, flash
+from flask.ext.login import login_user, logout_user
 from app.models import  User
 from app.login.forms import RegisterForm, LoginForm
 from app import lm
+
 from . import login
-
-from flask.ext.login import login_user, logout_user
-
-
 
 @lm.user_loader
 def load_user(id):
@@ -31,7 +29,7 @@ def handle_register():
     if register_form_info.validate():
         if User.objects(username=register_form_info.username.data):
             flash(u'用户名己被注册')
-            return redirect('/Register')
+            return register()
         else:
             new_user = User(username=register_form_info.username.data, password=register_form_info.password.data,
                             nickname=register_form_info.nickname.data, email=register_form_info.email.data)
@@ -41,7 +39,7 @@ def handle_register():
             return redirect('/')
     else:
         flash(u'用户名或密码不符合要求')
-        return redirect('/Register')
+        return register()
 
 
 @login.route('/Login')
@@ -66,10 +64,10 @@ def handle_login():
             return redirect('/')
         else:
             flash(u'帐号与密码不匹配')
-            return redirect('/Login')
+            return login_index()
     else:
         flash(u'非法输入')
-        return redirect('/Login')
+        return login_index()
 
 
 @login.route('/Logout')

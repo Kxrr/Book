@@ -1,18 +1,14 @@
 #-*- coding: utf-8 -*
-
-
 from flask import render_template, redirect, flash, request
-from app.models import BookInfo, User, Operation, Delivery
-from . import main
 from flask.ext.login import current_user, login_required
 
-from app.utils import amount_fake_aggregation
-from app.utils.email import send_fav_noti_to_owner,\
-    send_fav_noti_to_borrowed, send_borrow_noti_to_owner
+from app.models import BookInfo, User, Operation, Delivery
+from app.utils import amount
 from app.utils.search_mongo import search
+from app.utils.email import send_fav_noti_to_owner, send_fav_noti_to_borrowed, send_borrow_noti_to_owner
 
-
-page_limit = 100
+from . import main
+from config import PAGE_LIMIT
 
 
 @main.route('/')
@@ -24,26 +20,26 @@ def index(category=''):
     if category:
         books = BookInfo.objects.filter(**category_dict)
     else:
-        books = BookInfo.objects.limit(page_limit)
+        books = BookInfo.objects.limit(PAGE_LIMIT)
     users = User.objects
-    book_amount = amount_fake_aggregation.count_all()
+    book_amount = amount.count_all()
     book_out = Delivery.objects(returned__ne=True).count()
     return render_template('index.html', books=books, user=current_user, all_books=books,
-                           users=users, page=(book_count/page_limit)+2, current_page=1,
+                           users=users, page=(book_count/PAGE_LIMIT)+2, current_page=1,
                            book_amount=book_amount, book_out=book_out)
 
 
 @main.route('/page/<string:n>')
 def index_page(n):
     # TODO: 分页实现的优化
-    skip = (int(n)-1) * page_limit
+    skip = (int(n)-1) * PAGE_LIMIT
     book_count = BookInfo.objects.count()
-    books = BookInfo.objects.skip(skip).limit(page_limit)
+    books = BookInfo.objects.skip(skip).limit(PAGE_LIMIT)
     users = User.objects
-    book_amount = amount_fake_aggregation.count_all()
+    book_amount = amount.count_all()
     book_out = Delivery.objects(returned__ne=True).count()
     return render_template('index.html', books=books, user=current_user, all_books=books, users=users,
-                           page=(book_count/page_limit)+2, current_page=int(n),
+                           page=(book_count/PAGE_LIMIT)+2, current_page=int(n),
                            book_amount=book_amount, book_out=book_out)
 
 
@@ -59,9 +55,11 @@ def borrow_book(book_id):
             Operation(type='borrow', user=user, book_info=book).save()
             Delivery(user=user, book=book).save()
             # 发送邮件给拥有者
-            send_borrow_noti_to_owner(user, book.owner[0], book)
-            flash(u'「{}」, 操作成功, 己经发送借阅通知邮件给拥有者 {}({})'
-                  .format(book.title, book.owner[0].nickname, book.owner[0].real_name))
+            owner_list = []
+            for owner in book.owner:
+                send_borrow_noti_to_owner(user, owner, book)
+                owner_list.append(u'{}({})'.format(owner.nickname, owner.real_name))
+            flash(u'「{}」, 操作成功, 己经发送借阅通知邮件给拥有者 {}'.format(book.title, ','.join(owner_list)))
         else:
             flash(u'失败, 同一本书每人只能借一本')
     else:
@@ -76,12 +74,14 @@ def want_book(book_id):
     user = User.objects.get(id=current_user.id)
     user.update(push__wanted_book=book)
     # 发送邮件给正在读的人
-    send_fav_noti_to_borrowed(user, book.user_borrowed[0], book)
+    reader_list = []
+    for reader in book.user_borrowed:
+        send_fav_noti_to_borrowed(user, reader, book)
+        reader_list.append(u'{}({})'.format(reader.nickname, reader.real_name))
     # 发送邮件给拥者
-    send_fav_noti_to_owner(user, book.owner[0], book)
-
-    flash(u'「{}」, 收藏成功, 己经发送通知邮件给正在读这本书的 {}({})'
-          .format(book.title, book.user_borrowed[0].nickname, book.user_borrowed[0].real_name))
+    for owner in book.owner:
+        send_fav_noti_to_owner(user, owner, book)
+    flash(u'「{}」, 收藏成功, 己经发送通知邮件给正在读这本书的 {}'.format(book.title, ', '.join(reader_list)))
     return redirect('/')
 
 

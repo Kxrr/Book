@@ -6,6 +6,7 @@ from app.utils.spiders import DoubanSpider, DoubanReadSpider
 from flask.ext.login import login_required, current_user
 
 from . import manager
+import re
 
 @manager.route('/Manager')
 @login_required
@@ -21,33 +22,29 @@ def add_from_url():
     online_url = request.form['online_url']
     owner_id = request.form['owner']
     if 'book.douban' in raw_url:
-        spider = DoubanSpider(url=raw_url, owner_id=owner_id, online_url=online_url)
-        spider.crawl()
-        parse = spider.parse_content()
-        if parse:
-            flash(u'感谢小伙伴: {}, 为聘宝添砖加瓦了, 「{}」, 添加成功 '
-                  .format(current_user, spider.content_dict.get('title')))
-        else:
-            flash(u'添加失败, 请联系管理员')
-        Operation(type='add', url_info=raw_url,
-                  user=User.objects.get(id=current_user.id),
-                  success=True if parse else False).save()
+        urls = re.split(u",|，", raw_url)
+        for url in urls:
+            if url:
+                url = url.strip()
+                spider = DoubanSpider(url=url, owner_id=owner_id, online_url=online_url)
+                spider.crawl()
+                parse = spider.parse_content()
+                if parse:
+                    flash(u'感谢小伙伴: {}, 为聘宝添砖加瓦了, 「{}」, 添加成功 '
+                          .format(current_user.nickname, spider.content_dict.get('title')))
+                else:
+                    flash(u'{}, 添加失败, 请联系管理员'.format(url))
+                Operation(type='add', url_info=raw_url,
+                          user=User.objects.get(id=current_user.id),
+                          success=True if parse else False).save()
         return redirect('/Manager')
     elif 'read.douban' in raw_url:
-        # spider = DoubanReadSpider(url=raw_url, owner_id=owner_id, online_url=online_url)
-        # spider.crawl()
-        # parse = spider.parse_content()
-        # if parse:
-        #     flash(u'「%s」, 成功, 感谢小伙伴, 为聘宝添砖加瓦了'% (spider.title))
-        # Operation(type='add', url_info=raw_url,
-        #           user=User.objects.get(id=current_user.id)).save()
-        flash(u'暂不支持')
+        flash(u'暂不支持来自豆瓣阅读的图书')
         return redirect('/Manager')
-
     elif 'jd' in raw_url:
         return 'Under Working'
     else:
-        flash(u'暂不支持该链接')
+        flash(u'暂不支持该链接, 请使用豆瓣图书的链接')
         Operation(type='add', url_info=raw_url,note='not support',
                   user=User.objects.get(id=current_user.id)).save()
         return redirect('/Manager')

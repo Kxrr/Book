@@ -5,10 +5,11 @@
 """
 from app.models import BookInfo
 
+
 def count_all():
     sum_list = []
-    for each in BookInfo.objects:
-        sum_list.append(len(each.owner))
+    for book in BookInfo.objects:
+        sum_list.append(len(book.owner))
     result = sum(sum_list)
     return result
 
