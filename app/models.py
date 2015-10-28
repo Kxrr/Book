@@ -20,6 +20,7 @@ ROLE_CHOICES = (
     (u'admin', u'管理员'),
 )
 
+
 class User(DynamicDocument):
     """
     @summary: 用户
@@ -58,7 +59,7 @@ class User(DynamicDocument):
     def __unicode__(self):
         return self.username
 
-    meta = {'ordering': ['+nickname']}
+    meta = {'ordering': ['+nickname'], 'index_background': True, 'indexes': ['nickname']}
 
 
 class Comment(EmbeddedDocument):
@@ -68,7 +69,7 @@ class Comment(EmbeddedDocument):
     content = StringField()
     name = ReferenceField(User)
     time = DateTimeField(default=datetime.now())
-    meta = {'ordering': ['-time', '-id']}
+    meta = {'ordering': ['-id'], 'index_background': True}
 
 
 class BookInfo(DynamicDocument):
@@ -87,18 +88,17 @@ class BookInfo(DynamicDocument):
     update_time = DateTimeField(default=datetime.now())
     # on_bookshelf = BooleanField(default=True)
     deleted = BooleanField(default=False)  # 方便实现删除图书操作
-    num = IntField(default=1)  # 书籍数量, 就对多本相同书属于不同的人
-    owner = ListField(ReferenceField(User))  # 同上
-
+    num = IntField(default=1)  # 书籍数量, 对应多本相同书属于不同的人的情况
+    owner = ListField(ReferenceField(User))
     user_borrowed = ListField(ReferenceField(User))  # 哪些人正在借
-
     comment = ListField(EmbeddedDocumentField(Comment))
+
+    meta = {'ordering': ['-id'], 'index_background': True,
+            'indexes': ['title', 'tags', 'author', ('-deleted', '-id')]}
 
     @property
     def str_id(self):
         return str(self.id)
-
-    meta = {'ordering': ['-update_time', '-id']}
 
     def __unicode__(self):
         return self.title
@@ -114,7 +114,7 @@ class BookInfo(DynamicDocument):
 
 class Operation(DynamicDocument):
     """
-    @summary: 记录每一次操作, 不到万不得以不调用
+    @summary: 记录每一次操作, 不调用
     """
     type = StringField()
     user = ReferenceField(User)
@@ -123,7 +123,7 @@ class Operation(DynamicDocument):
     note = StringField()
 
     url_info = StringField()
-    meta = {'oddering':['-time', '-id']}
+    meta = {'ordering': ['-id'], 'index_background': True}
 
 
 class Delivery(DynamicDocument):
@@ -142,3 +142,5 @@ class Delivery(DynamicDocument):
     @property
     def str_id(self):
         return str(self.id)
+
+    meta = {'ordering': ['-id'], 'index_background': True, 'indexes': ['return_time', 'deadline']}
