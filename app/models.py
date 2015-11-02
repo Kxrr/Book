@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*
-from mongoengine import DynamicDocument, EmbeddedDocument, connect, StringField, ListField, FloatField, \
-    DateTimeField, BooleanField, ReferenceField, EmbeddedDocumentField, IntField, queryset_manager
-from config import MONGODBDATEBASE
+from flask.ext.login import UserMixin
+from mongoengine import DynamicDocument, EmbeddedDocument, StringField, ListField, FloatField, \
+                        DateTimeField, BooleanField, ReferenceField, EmbeddedDocumentField, IntField
+from mongoengine import queryset_manager, connect
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from config import MONGO_DATABASE
 from datetime import datetime, timedelta
 
-connect(**MONGODBDATEBASE)
+connect('books', **MONGO_DATABASE)
 
 CATEGORY_CHOICES = (
     (u'tech', u'技术'),
@@ -21,13 +25,13 @@ ROLE_CHOICES = (
 )
 
 
-class User(DynamicDocument):
+class User(DynamicDocument, UserMixin):
     """
     @summary: 用户
     """
     username = StringField(max_length=20, unique=True, required=True, min_length=4)
     email = StringField(unique=True)
-    password = StringField(required=True, min_length=6)
+    password_hash = StringField()
     nickname = StringField(min_length=1)
     real_name = StringField()
     borrowed_book = ListField(ReferenceField('BookInfo'))
@@ -35,21 +39,23 @@ class User(DynamicDocument):
     owned_book = ListField(ReferenceField('BookInfo'))
     wanted_book = ListField(ReferenceField('BookInfo'))  # 没有书时的收藏功能
 
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
     def get_id(self):
         return str(self.id)  # Watch out here, needs str
 
     @property
     def str_id(self):
         return str(self.id)
+
+    @property
+    def password(self):
+        return AttributeError('password is not readable')
+
+    @password.setter
+    def password(self, value):
+        self.password_hash = generate_password_hash(value)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def save(self, *args, **kwargs):
         if not self.real_name:
@@ -59,7 +65,7 @@ class User(DynamicDocument):
     def __unicode__(self):
         return self.username
 
-    meta = {'ordering': ['+nickname'], 'index_background': True, 'indexes': ['nickname']}
+    meta = {'ordering': ['+nickname'], 'index_background': False, 'indexes': ['nickname']}
 
 
 class Comment(EmbeddedDocument):
@@ -93,7 +99,7 @@ class BookInfo(DynamicDocument):
     user_borrowed = ListField(ReferenceField(User))  # 哪些人正在借
     comment = ListField(EmbeddedDocumentField(Comment))
 
-    meta = {'ordering': ['-id'], 'index_background': True,
+    meta = {'ordering': ['-id'], 'index_background': False,
             'indexes': ['title', 'tags', 'author', ('-deleted', '-id')]}
 
     @property

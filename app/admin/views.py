@@ -4,13 +4,12 @@ from flask import redirect, flash
 from flask_admin import BaseView, expose
 from flask_admin.contrib.mongoengine import ModelView
 from flask_login import current_user, login_required
-from app.models import User, BookInfo
+from ..models import User, BookInfo
 from . import admin
 
 
 class UserView(ModelView):
     column_searchable_list = ['username', 'email', 'nickname', 'real_name']
-    column_exclude_list = ['password']
     column_labels = dict(owned_book=u'贡献的书', borrowed_book=u'在借的书',
                          wanted_book=u'收藏的书')
 

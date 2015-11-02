@@ -1,11 +1,11 @@
-#-*- coding: utf-8 -*-                                                                                     
+# -*- coding: utf-8 -*-
 
 from flask import render_template, redirect, url_for, flash
-from app.models import BookInfo, User, Operation, Delivery
+from ..models import BookInfo, User, Operation, Delivery
 from . import profile
 from flask.ext.login import current_user, login_required
-
 from datetime import datetime
+
 
 @profile.route('/Shelf')
 def profile_info():
@@ -49,4 +49,3 @@ def un_authorized(e):
     flash(u'此操作需要登录')
     # return redirect(url_for('user.login')), 401
     return redirect('/Login')
-

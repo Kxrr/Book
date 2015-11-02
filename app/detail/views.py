@@ -1,6 +1,6 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from flask import render_template, redirect, flash, request, url_for
-from app.models import BookInfo, User, Delivery, Comment
+from ..models import BookInfo, User, Delivery, Comment
 from . import detail
 from flask.ext.login import current_user, login_required
 

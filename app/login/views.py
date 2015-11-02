@@ -1,20 +1,18 @@
-#-*- coding: utf-8 -*-                                                                                     
+# -*- coding: utf-8 -*-
 
 from flask import render_template, request, redirect, flash
 from flask.ext.login import login_user, logout_user
-from app.models import  User
-from app.login.forms import RegisterForm, LoginForm
-from app import lm
+from flask.helpers import url_for
 
+from ..models import User
+from ..login.forms import RegisterForm, LoginForm
+from .. import lm
 from . import login
+
 
 @lm.user_loader
 def load_user(id):
-    user = User.objects(id=id)
-    if user:
-        return user.first()
-    else:
-        return ''
+    return User.objects.get(id=id)
 
 
 @login.route('/Register')
@@ -50,18 +48,17 @@ def login_index():
 
 @login.route('/handle_login', methods=['POST'])
 def handle_login():
-    login_form_info = LoginForm(request.form)
-    if login_form_info.validate():
-        username = login_form_info.username.data
-        password = login_form_info.password.data
+    form = LoginForm(request.form)
+    if form.validate():
+        username = form.username.data
+        password = form.password.data
         if '@' in username:
-            user_online = User.objects(email=username, password=password)
+            user = User.objects(email=username)
         else:
-            user_online = User.objects(username=username, password=password)
-
-        if user_online:
-            login_user(user=user_online.first(), remember=True)
-            return redirect('/')
+            user = User.objects(username=username)
+        if user and user.first().verify_password(password):
+            login_user(user=user.first(), remember=True)
+            return redirect(url_for('main.index'))
         else:
             flash(u'帐号与密码不匹配')
             return login_index()
@@ -75,5 +72,3 @@ def handle_logout():
     logout_user()
     flash(u'己登出')
     return redirect('/')
-
-

@@ -39,6 +39,15 @@ class BasicSpider(object):
         else:
             return False
 
+    def save_with_existed(self):
+        if self.if_exist_book():
+            self.existed_book.update(push__owner=User.objects.get(id=self.owner_id), inc__num=1)
+            print self.existed_book
+            User.objects(id=self.owner_id).first().update(push__owned_book=self.existed_book.first())
+            return True
+        else:
+            return self.save()
+
 
 class DoubanSpider(BasicSpider):
     def parse_content(self):
@@ -60,45 +69,23 @@ class DoubanSpider(BasicSpider):
             'img_url': img_url[0] if img_url else '',
         }
 
-        if self.if_exist_book():
-            self.existed_book.update(push__owner=User.objects.get(id=self.owner_id), inc__num=1)
-            print self.existed_book
-            User.objects(id=self.owner_id).first().update(push__owned_book=self.existed_book.first())
-            return True
-        else:
-            return self.save()
+        return self.save_with_existed()
 
-class DoubanReadSpider(BasicSpider):
-    # def parse_content(self):
-    #     title = self.html.xpath('//h1[@class="article-title"]/text()')
-    #     if title:
-    #         self.title = title[0]
-    #
-    #     author = self.html.xpath('//a[@class="author-item"]/text()')
-    #     if author:
-    #         self.author = author[0]
-    #
-    #     rate = self.html.xpath('//span[@class="rating-average"]/text()')
-    #     if rate:
-    #         self.rate = float(rate[0])
-    #
-    #     img_url = self.html.xpath('//div[@class="cover shadow-cover"]/img/@src')
-    #     if img_url:
-    #         self.img_url = img_url[0]
-    #
-    #     self.detail = self.html.xpath('//div[@class="article-profile-section article-profile-intros"]//p/text()')
-    #     self.tags = self.html.xpath('//*[@class="tags"]//span[1]/text()')
-    #     self.category = ''
-    #
-    #     if not BookInfo.objects(title=self.title, author=self.author):
-    #         new_book = self.save()
-    #         new_book.update(push__owner=User.objects.get(id=self.owner_id))
-    #         User.objects(id=self.owner_id).first().update(push__owned_book=new_book)
-    #         return True
-    #     else:
-    #         exist_book = BookInfo.objects(title=title)
-    #         add_book = exist_book.update(push__owner=User.objects.get(id=self.owner_id), inc__num=1)
-    #         User.objects(id=self.owner_id).first().update(push__owned_book=exist_book.first())
-    #         return True
-    pass
 
+class JingDongSpider(BasicSpider):
+    def parse_content(self):
+        title = self.html.xpath('//div[@id="name"]/h1/text()')
+        author = self.html.xpath('//div[@id="name"]/div[@id="p-author"]/a/text()')
+        img_url = self.html.xpath('//div[@id="preview"]//img/@src')
+        detail = self.html.xpath('//div[@class="book-detail-item"]/div[@class="item-mc"]/div[@class="book-detail-content"]/p/text()')  # paragraph, list
+
+        self.content_dict = {
+            'title': title[0] if title else '',
+            'author': author[0] if author else '',
+            'detail': detail if detail else [],
+            'raw_url': self.url,
+            'online_url': self.online_url,
+            'img_url': img_url[0] if img_url else '',
+        }
+
+        return self.save_with_existed()

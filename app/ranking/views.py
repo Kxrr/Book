@@ -1,8 +1,9 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from flask import render_template, redirect, url_for, flash
 from . import ranking
-from app.utils import ranking_statics
+from ..utils import ranking_statics
+
 
 @ranking.route('/Ranking')
 def ranking():

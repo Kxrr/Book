@@ -2,10 +2,10 @@
 from flask import render_template, redirect, flash, request
 from flask.ext.login import current_user, login_required
 
-from app.models import BookInfo, User, Operation, Delivery
-from app.utils import amount
-from app.utils.search_mongo import search
-from app.utils.email import send_fav_noti_to_owner, send_fav_noti_to_borrowed, send_borrow_noti_to_owner
+from ..models import BookInfo, User, Operation, Delivery
+from ..utils import amount
+from ..utils.search_mongo import search
+from ..utils.email import send_fav_noti_to_owner, send_fav_noti_to_borrowed, send_borrow_noti_to_owner
 
 from . import main
 from config import PAGE_LIMIT
