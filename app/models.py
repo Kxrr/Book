@@ -68,7 +68,7 @@ class Comment(EmbeddedDocument):
     """
     content = StringField()
     name = ReferenceField(User)
-    time = DateTimeField(default=datetime.now())
+    time = DateTimeField(default=datetime.now)
     meta = {'ordering': ['-id'], 'index_background': True}
 
 
@@ -85,7 +85,7 @@ class BookInfo(DynamicDocument):
     raw_url = StringField()
     online_url = StringField()
     img_url = StringField()
-    update_time = DateTimeField(default=datetime.now())
+    update_time = DateTimeField(default=datetime.now)
     # on_bookshelf = BooleanField(default=True)
     deleted = BooleanField(default=False)  # 方便实现删除图书操作
     num = IntField(default=1)  # 书籍数量, 对应多本相同书属于不同的人的情况
@@ -118,7 +118,7 @@ class Operation(DynamicDocument):
     """
     type = StringField()
     user = ReferenceField(User)
-    time = DateTimeField(default=datetime.now())
+    time = DateTimeField(default=datetime.now)
     book_info = ReferenceField(BookInfo)
     note = StringField()
 
@@ -130,8 +130,8 @@ class Delivery(DynamicDocument):
     """
     @summary: 书籍记录和归还时间, 采用单条文档的方式
     """
-    borrow_time = DateTimeField(default=datetime.now())
-    deadline = DateTimeField(default=datetime.now() + timedelta(days=30))  # 设置一个月后归还
+    borrow_time = DateTimeField(default=datetime.now)
+    deadline = DateTimeField()
 
     user = ReferenceField(User)
     book = ReferenceField(BookInfo)
@@ -143,4 +143,10 @@ class Delivery(DynamicDocument):
     def str_id(self):
         return str(self.id)
 
+    def save(self, *args, **kwargs):
+        if not self.deadline:
+            self.deadline = self.borrow_time + timedelta(days=30)   # 设置一个月后归还
+        super(Delivery, self).save(*args, **kwargs)
+
     meta = {'ordering': ['-id'], 'index_background': True, 'indexes': ['return_time', 'deadline']}
+
