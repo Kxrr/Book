@@ -55,4 +55,4 @@ $ source ~/.bashrc
 2. 进入bookroom：`$ workon bookroom`
 3. 安装依赖包：`$ pip install –r requirements.txt`
 4. 设置环境： `$ export PYTHONPATH=$(pwd)`
-5. 运行: `$ python run_bookroom.py`
+5. 运行: `$ python manager.py runserver -d`

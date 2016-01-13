@@ -38,6 +38,7 @@ class User(DynamicDocument, UserMixin):
     role = StringField(choices=ROLE_CHOICES, default='staff')
     owned_book = ListField(ReferenceField('BookInfo'))
     wanted_book = ListField(ReferenceField('BookInfo'))  # 没有书时的收藏功能
+    confirmed = BooleanField(default=False)
 
     def get_id(self):
         return str(self.id)  # Watch out here, needs str
@@ -52,7 +53,9 @@ class User(DynamicDocument, UserMixin):
 
     @password.setter
     def password(self, value):
-        self.password_hash = generate_password_hash(value)
+        # TODO: ?
+        if not self.password_hash:
+            self.password_hash = generate_password_hash(value)
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
