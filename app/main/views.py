@@ -112,6 +112,7 @@ def filter_shelf():
     users = User.objects
     return render_template('index.html', books=books, user=current_user, all_books=all_books, users=users, page=1)
 
+
 @main.route('/category/<string:category>')
 def filter_category(category):
     return index(category=category)

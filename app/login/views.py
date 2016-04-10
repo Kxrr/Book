@@ -39,8 +39,11 @@ def handle_register():
             flash(u'用户名己被注册')
             return register()
         else:
-            new_user = User(username=register_form_info.username.data, password=register_form_info.password.data,
-                            nickname=register_form_info.nickname.data, email=register_form_info.email.data)
+            new_user = User(
+                username=register_form_info.username.data,
+                password=register_form_info.password.data,
+                email=register_form_info.email.data
+            )
             new_user.save()
             send_email(rec=ADMIN_MAIL, html_content='', subject='有新用户需要审核 {}'.format(new_user.email))
             # login_user(user=new_user, remember=True)

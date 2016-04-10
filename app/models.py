@@ -53,7 +53,6 @@ class User(DynamicDocument, UserMixin):
 
     @password.setter
     def password(self, value):
-        # TODO: ?
         if not self.password_hash:
             self.password_hash = generate_password_hash(value)
 
@@ -61,8 +60,8 @@ class User(DynamicDocument, UserMixin):
         return check_password_hash(self.password_hash, password)
 
     def save(self, *args, **kwargs):
-        if not self.real_name:
-            self.real_name = self.nickname
+        if not self.nickname:
+            self.nickname = self.username
         return super(User, self).save(*args, **kwargs)
 
     def __unicode__(self):

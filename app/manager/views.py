@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
+import re
 
 from flask import render_template, request, redirect, flash
+from flask.ext.login import login_required, current_user
+
+from . import manager
 from ..models import BookInfo, User, Operation
 from ..utils.spiders import DoubanSpider, JingDongSpider
-from flask.ext.login import login_required, current_user
-from . import manager
-import re
 
 
 @manager.route('/Manager')
 @login_required
 def manager_index():
-    if current_user.is_active():  # TODO: 管理role
+    if current_user.is_authenticated:  # TODO: 管理role
         books = BookInfo.objects
         users = User.objects(id__ne=current_user.id)
         return render_template('manager.html', books=books, current_user=current_user, users=users)
@@ -38,8 +39,12 @@ def add_from_url():
         else:
             pass
         if parse:
-            flash(u'感谢小伙伴: {}, 为聘宝添砖加瓦了, 「{}」, 添加成功 '
-                  .format(current_user.nickname, spider.content_dict.get('title')))
+            flash(
+                u'感谢小伙伴: {}, 为聘宝添砖加瓦了, 「{}」, 添加成功 '.format(
+                    current_user.nickname,
+                    spider.content_dict.get('title')
+                )
+            )
         else:
             flash(u'{}, 添加失败, 请联系管理员'.format(url))
         Operation(type='add', url_info=raw_url,
