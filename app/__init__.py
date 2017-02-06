@@ -28,3 +28,4 @@ app.register_blueprint(manager_blueprint)  # manager: 管理图书,添加图书
 app.register_blueprint(ranking_blueprint)  # ranking: 排行榜
 
 from app import admin
+
